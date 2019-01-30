@@ -1,4 +1,10 @@
 .product-item {
+  .timetable td {
+    padding: 5px;
+  }
+  .timetable {
+    border-spacing: 20px !important;
+  }
   .product-item-img {}
   .product-item-description {}
   @media (min-width: 992px) {
@@ -18,5 +24,6 @@
       margin-top: -3rem;
       max-width: 50vw;
     }
+
   }
 }
