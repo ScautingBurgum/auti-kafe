@@ -5,6 +5,11 @@
   .timetable {
     border-spacing: 20px !important;
   }
+  thead tr th:first-child,
+ tbody tr td:first-child {
+  width: 8rem;
+  font-weight: normal;
+ }
   .product-item-img {}
   .product-item-description {}
   @media (min-width: 992px) {
