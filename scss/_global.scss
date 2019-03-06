@@ -60,7 +60,13 @@ p {
     font-weight: 100;
   }
 }
+.product-item-description {
+  .bg-faded {
+    width:100%;
+  }
+}
 
 .bg-faded {
   background-color: fade-out($white, 0.15);
+  word-break: break-all;
 }
