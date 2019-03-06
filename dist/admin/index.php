@@ -85,7 +85,7 @@
 					</li>
 					<li>
 						<a id="deletevlakknop" style="cursor: pointer" name='deletevlak'><i class="fa fa-group"></i>
-						Verwijder artikel
+						Huidige artikels
 						</a>
 					</li>
 					<li>
@@ -115,10 +115,25 @@
 	</tbody>
 </table>
 <div id="postvlak" class="verbergItem pages"><form method="post">
-	<label for="titel">Titel:</label><br /><input type="text" id="titel" name="titel"><br />
+	<?php 
+	//<?php if(isset($count)) { echo $resarray[$count]['text']; } 
+	$query = "SELECT * FROM evenement";
+	if($query = mysqli_query($conn, $query)) {
+		$c = 0;
+		while($result = mysqli_fetch_assoc($query)) {
+			$resarray[] = $result;
+			$c++;
+		}
+		$numrows = mysqli_num_rows($query);
+	?>
+	<label for="titel">Titel:</label><br /><input type="text" id="titel" name="titel" value="<?php if(isset($count)) { echo $resarray[$count]['titel']; } ?>"><br />
 	<hr><label for="text">Text:</label><br /><textarea id="text" cols="60" rows="10" name="text"></textarea><br />
-	<hr><label for="date">Datum:</label><input id="date" type="date" name="date"><br />
+	
+	<hr><label for="date">Datum:</label><input id="date" type="date" name="date" value="<?php if(isset($count)) { echo $resarray[$count]['datetime']; } ?>"><br />
 	<input id="submit" type="submit" name="submit" value="Submit"></form>
+	<?php
+	}
+	?>
 </div>
 <div id="deletevlak" class="verbergItem pages">
 	<?php
@@ -135,7 +150,7 @@
 		}		
 		//var_Dump($resarray);
 		echo '<hr>Titel: <br />' . $resarray[$count]['titel'] . '<br /><hr>';
-		echo 'Text: <br />' . $resarray[$count]['text'] . '<br /><hr>';
+		//echo 'Text: <br />' . $resarray[$count]['text'] . '<br /><hr>';
 		echo 'Datum: ' . $resarray[$count]['datetime'] . '<br />';
 		$query = "SELECT showone FROM kafelogin";
 		if($query = mysqli_query($conn, $query)) {
@@ -144,6 +159,7 @@
 			echo '<form action="" method="post">
 			<input type="hidden" name="id" value="'.$resarray[$count]['id'].'">
 			<input id="showbutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" <?php echo 'value="Show" name="showbutton">
+			<a name="postvlak" href="?artikel="' .$resarray[$count]['id']. '"><input id="editbutton" type="submit" value="Edit" name="editbutton"></a>
 			</form>';
 			}
 		} else {
@@ -172,15 +188,27 @@
 //Begin Database troep
 
 if(isset($_POST['submit'])) {
-	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date'])) {
+	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && !isset($count)) {
 		$titel = mysqli_real_escape_string ($conn,$_POST['titel']);
 		$text = mysqli_real_escape_string ($conn,$_POST['text']);
 		$date = $_POST['date'];
 		$query = "INSERT INTO evenement (`titel`, `datetime`, `text`)
 		VALUES ('$titel', '$date', '$text')";
 		if(mysqli_query($conn, $query)) {
-			echo "Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Submitted!";			
-			header("refresh:3;admin-panel.php");
+			echo "<div id='continue'>Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
+		} else {
+			echo("Error description: " . mysqli_error($conn));
+		}
+	}
+	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && isset($count)) {
+		$titel = mysqli_real_escape_string ($conn,$_POST['titel']);
+		$text = mysqli_real_escape_string ($conn,$_POST['text']);
+		$date = $_POST['date'];
+		$query = "UPDATE evenement
+		SET `titel` = '$titel', `text` = '$text', `datetime` = '$date'
+		WHERE `id` = '$count'; ";
+		if(mysqli_query($conn, $query)) {
+			echo "<div id='continue'>Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
@@ -210,6 +238,9 @@ if(isset($_POST['showbutton'])) {
 	} else {
 		echo("Error description: " . mysqli_error($conn));
 	}
+}
+if(isset($_POST['showbutton'])) {
+	$id = $_POST['id'];
 }
 if(isset($_POST['showonebutton'])) {
 	if($_POST['showonebutton'] == 'showone') {
@@ -399,6 +430,25 @@ $(function() {
 </script>
 
     <script src="adminpanel.js"></script>
+    <?php 
+	//<?php if(isset($count)) { echo $resarray[$count]['text']; } 
+	$query = "SELECT * FROM evenement";
+	if($query = mysqli_query($conn, $query)) {
+		$c = 0;
+		while($result = mysqli_fetch_assoc($query)) {
+			$resarray[] = $result;
+			$c++;
+		}
+		$numrows = mysqli_num_rows($query);
+		if(isset($count)) { echo $textareatext = $resarray[$count]['text']; } else { $textareatext = '';}
+	?>
+    <script>
+		easyMDE.value('<?php echo json_encode($textareatext); ?>');
+		document.getElementById('continue').scrollIntoView();
+	</script>
+	<?php
+	}
+	?>
   </body>
 
 </html>
