@@ -1,0 +1,90 @@
+#header {
+	width: 96%;
+	height: 30%;
+	margin: 0 auto;
+	border: 1px solid bisque;
+	border-radius: 5px;
+	padding: 10px;
+	padding-bottom: 2px;
+}
+#header h2 {
+	display: block;
+	margin: 0 auto;
+	width: 13%;
+}
+#footer {
+	clear:both;
+}
+#header #welkomblok {
+	float:right;
+	padding: 15px;
+}
+.verbergItem {
+	display:none;
+}
+#adminpanelinterface {
+	width: 100%;
+}
+#adminpanelinterface .header {
+	padding: 10px;
+	padding-bottom: 2px;
+}
+#adminpanelinterface tr  {
+	width: 75%;	
+}
+#postvlak, #deletevlak, #showvlak {
+	padding:15px;
+}
+#adminpanelinterface td  {
+	width: 100%;
+	display: table;
+}
+#adminpanelinterface #leftpanel {
+	background: #7daada;
+	width: 250px; 
+	float: left; 
+	min-height:500px;
+	position: relative;
+	padding-top: 15px;
+}
+#adminpanelinterface .thead-alt {
+	background: #2c5178;
+	padding:10px;
+}
+.admincontent {
+	margin-left: 2%;
+	margin-right:2%;
+	border: 1px solid bisque;
+	border-radius: 5px;
+	margin-top: 2%;
+	padding: 15px;
+}
+#postvlak textarea {
+	max-width: 95%;
+}
+#postvlak #submit, #deletevlak #deletebutton, #loginvlak #loginsubmit {
+	margin-top: 15px;
+	float: right;
+}
+#loginvlak {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 20px;
+	border: 1px solid blanchedalmond;
+	border-radius: 5px;
+}
+#loginvlak .login {
+	width: 95%;
+}
+#goback {
+	position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 15px;
+    border: 1px solid blanchedalmond;
+    border-radius: 5px;
+
+}
+}

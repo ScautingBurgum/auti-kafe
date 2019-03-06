@@ -1,6 +1,6 @@
 // Load plugins
 const autoprefixer = require("gulp-autoprefixer");
-const browsersync = require("browser-sync").create();
+const browsersync = require("browser-sync");
 const cleanCSS = require("gulp-clean-css");
 const gulp = require("gulp");
 const header = require("gulp-header");
@@ -8,6 +8,8 @@ const plumber = require("gulp-plumber");
 const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const pkg = require('./package.json');
+const connectPHP = require('gulp-connect-php');
+// const livereload = require('gulp-livereload');
 
 // Set the banner content
 const banner = ['/*!\n',
@@ -27,14 +29,14 @@ gulp.task('vendor', function(cb) {
       '!./node_modules/bootstrap/dist/css/bootstrap-grid*',
       '!./node_modules/bootstrap/dist/css/bootstrap-reboot*'
     ])
-    .pipe(gulp.dest('./html/vendor/bootstrap'))
+    .pipe(gulp.dest('./dist/vendor/bootstrap'))
 
   // jQuery
   gulp.src([
       './node_modules/jquery/dist/*',
       '!./node_modules/jquery/dist/core.js'
     ])
-    .pipe(gulp.dest('./html/vendor/jquery'))
+    .pipe(gulp.dest('./dist/vendor/jquery'))
 
   cb();
 
@@ -56,12 +58,12 @@ function css() {
     .pipe(header(banner, {
       pkg: pkg
     }))
-    .pipe(gulp.dest("./html/css/"))
+    .pipe(gulp.dest("./dist/css/"))
     .pipe(rename({
       suffix: ".min"
     }))
     .pipe(cleanCSS())
-    .pipe(gulp.dest("./html/css/"))
+    .pipe(gulp.dest("./dist/css/"))
     .pipe(browsersync.stream());
 }
 
@@ -69,12 +71,21 @@ function css() {
 gulp.task("css", css);
 
 // BrowserSync
-function browserSync(done) {
-  browsersync.init({
-    server: {
-      baseDir: "./html/"
-    }
+function browserSyncStart(done) {
+  // browsersync.init({
+  //   server: {
+  //     baseDir: "./dist/"
+  //   }
+  // });
+  connectPHP.server({
+    hostname: '0.0.0.0',
+    bin: 'C:/xampp/php/php.exe',
+    ini: 'C:/xampp/php/php.ini',
+    port: 8000,
+    base: 'dist'
+    // livereload: true
   });
+
   done();
 }
 
@@ -89,6 +100,7 @@ function browserSyncReload(done) {
 function watchFiles() {
   gulp.watch("./scss/**/*", css);
   gulp.watch("./src/**/*.html", browserSyncReload);
+  gulp.watch("./src/**/*.php", browserSyncReload);
   gulp.watch("./img/*",syncImgs);
 }
 var template = require('gulp-html-header');
@@ -96,13 +108,22 @@ var template = require('gulp-html-header');
 function temp() {
     gulp.src('./src/**/*.html')
         .pipe(template())
-        .pipe(gulp.dest('html'))
+        .pipe(gulp.dest('dist'))
+    gulp.src('./src/**/*.php')
+        .pipe(template())
+        .pipe(gulp.dest('dist'))
+    gulp.src('./src/**/*.css')
+        .pipe(template())
+        .pipe(gulp.dest('dist'))
+    gulp.src('./src/**/*.js')
+        .pipe(template())
+        .pipe(gulp.dest('dist'))
 }
 function syncImgs(){
   gulp.src('./img/*')
-      .pipe(gulp.dest('./html/img/'));
+      .pipe(gulp.dest('./dist/img/'));
 }
 
 gulp.task("default", gulp.parallel('vendor', css));
 // dev task
-gulp.task("dev", gulp.parallel(watchFiles, browserSync, temp, syncImgs));
+gulp.task("dev", gulp.parallel(watchFiles, browserSyncStart, temp, syncImgs));
