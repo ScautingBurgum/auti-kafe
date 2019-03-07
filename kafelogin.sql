@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 06 mrt 2019 om 11:11
+-- Gegenereerd op: 07 mrt 2019 om 13:33
 -- Serverversie: 10.1.37-MariaDB
 -- PHP-versie: 7.3.1
 
@@ -30,15 +30,27 @@ USE `kafelogin`;
 -- Tabelstructuur voor tabel `evenement`
 --
 
-DROP TABLE IF EXISTS `evenement`;
-CREATE TABLE IF NOT EXISTS `evenement` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `evenement` (
+  `id` int(11) NOT NULL,
   `titel` varchar(64) NOT NULL,
   `datetime` date NOT NULL,
   `text` text NOT NULL,
-  `actief` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `actief` tinyint(4) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Tabelstructuur voor tabel `images`
+--
+
+CREATE TABLE `images` (
+  `id` int(11) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  `original_name` varchar(64) NOT NULL,
+  `mime_type` varchar(20) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -46,14 +58,57 @@ CREATE TABLE IF NOT EXISTS `evenement` (
 -- Tabelstructuur voor tabel `kafelogin`
 --
 
-DROP TABLE IF EXISTS `kafelogin`;
-CREATE TABLE IF NOT EXISTS `kafelogin` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `kafelogin` (
+  `id` int(11) NOT NULL,
   `email` varchar(64) NOT NULL,
   `password` varchar(64) NOT NULL,
   `showone` tinyint(4) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
+  `picturecount` int(12) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexen voor geëxporteerde tabellen
+--
+
+--
+-- Indexen voor tabel `evenement`
+--
+ALTER TABLE `evenement`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexen voor tabel `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexen voor tabel `kafelogin`
+--
+ALTER TABLE `kafelogin`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT voor geëxporteerde tabellen
+--
+
+--
+-- AUTO_INCREMENT voor een tabel `evenement`
+--
+ALTER TABLE `evenement`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT voor een tabel `images`
+--
+ALTER TABLE `images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT voor een tabel `kafelogin`
+--
+ALTER TABLE `kafelogin`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
