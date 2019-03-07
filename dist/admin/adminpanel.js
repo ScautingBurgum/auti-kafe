@@ -2,6 +2,8 @@ $( document ).ready(function() {
 	$('.pages').not('#start').addClass("verbergItem");
 	$("#mainpage").append($("#start"));		
 	var delVlakActief = localStorage.getItem('deleteVlakActief');
+	var imageVlakActief = localStorage.getItem('imageVlakActief');
+	var imgselVlakActief = localStorage.getItem('imgselVlakActief');
 	var LPostVlakActief = localStorage.getItem('postVlakActief');
 	if(delVlakActief === 'true')	{
 		$("#mainpage").append($("#deletevlak"));	
@@ -9,6 +11,12 @@ $( document ).ready(function() {
 	} else if(LPostVlakActief === 'true')	{
 		$("#mainpage").append($("#postvlak"));	
 		$("#postvlak").removeClass("verbergItem");
+	} else if(imageVlakActief === 'true') {
+		$("#mainpage").append($("#imagevlak"));	
+		$("#imagevlak").removeClass("verbergItem");
+	} else if(imgselVlakActief === 'true') {
+		$("#mainpage").append($("#imageselectvlak"));	
+		$("#imageselectvlak").removeClass("verbergItem");
 	}
 	});
 
@@ -21,6 +29,16 @@ $( document ).ready(function() {
 		localStorage.setItem('deleteVlakActief', true);
 	} else {
 		localStorage.setItem('deleteVlakActief', false);
+	}
+	if(name == 'imagevlak') {
+		localStorage.setItem('imageVlakActief', true);
+	} else {
+		localStorage.setItem('imageVlakActief', false);
+	}
+	if(name == 'imageselectvlak') {
+		localStorage.setItem('imgselVlakActief', true);
+	} else {
+		localStorage.setItem('imgselVlakActief', false);
 	}
 	if(name == 'postvlak') {
 		localStorage.setItem('postVlakActief', true);

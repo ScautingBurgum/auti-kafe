@@ -32,8 +32,12 @@
 #adminpanelinterface tr  {
 	width: 75%;	
 }
-#postvlak, #deletevlak, #showvlak {
+#postvlak, #deletevlak, #showvlak, #imagevlak, #imageselectvlak {
 	padding:15px;
+}
+
+#imageselectvlak .imagediv {
+	float: left;
 }
 #adminpanelinterface td  {
 	width: 100%;
@@ -86,5 +90,4 @@
     border: 1px solid blanchedalmond;
     border-radius: 5px;
 
-}
 }

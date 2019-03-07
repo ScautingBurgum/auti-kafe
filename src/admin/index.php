@@ -15,7 +15,7 @@
 	if(isset($_GET['artikel'])) {
 		$count = $_GET['artikel'];
 	} else {
-		$count = 0;
+		$count = '';
 	}
 	?>
 </head>
@@ -48,6 +48,16 @@
 						</a>
 					</li>
 					<li>
+						<a id="imageuploadknop" style="cursor: pointer" name='imagevlak'><i class="fa fa-group"></i>
+						Foto upload
+						</a>
+					</li>
+					<li>
+						<a id="imageselectknop" style="cursor: pointer" name='imageselectvlak'><i class="fa fa-group"></i>
+						Foto select
+						</a>
+					</li>
+					<li>
 						<a id="showvlakknop" style="cursor: pointer" name='showvlak'><i class="fa fa-group"></i>
 						Opties
 						</a>
@@ -73,7 +83,8 @@
 		</tr>
 	</tbody>
 </table>
-<div id="postvlak" class="verbergItem pages"><form method="post">
+<div id="postvlak" class="verbergItem pages" style='padding: 15px'>
+	<form name="upload" enctype="multipart/form-data" method="post">
 	<?php 
 	//<?php if(isset($count)) { echo $resarray[$count]['text']; } 
 	$query = "SELECT * FROM evenement";
@@ -85,16 +96,70 @@
 		}
 		$numrows = mysqli_num_rows($query);
 	?>
-	<label for="titel">Titel:</label><br /><input type="text" id="titel" name="titel" value="<?php if(isset($count)) { echo $resarray[$count]['titel']; } ?>"><br />
+	<label for="titel">Titel:</label><br /><input type="text" id="titel" name="titel" value="<?php if(isset($count) && $count !== '') { echo $resarray[$count]['titel']; } ?>"><br />
 	<hr><label for="text">Text:</label><br /><textarea id="text" cols="60" rows="10" name="text"></textarea><br />
-	
-	<hr><label for="date">Datum:</label><input id="date" type="date" name="date" value="<?php if(isset($count)) { echo $resarray[$count]['datetime']; } ?>"><br />
+	<hr><label for="date">Datum:</label><input id="date" type="date" name="date" value="<?php if(isset($count) && $count !== '') { echo $resarray[$count]['datetime']; } ?>"><br />
 	<input id="submit" type="submit" name="submit" value="Submit"></form>
 	<?php
 	}
 	?>
 </div>
-<div id="deletevlak" class="verbergItem pages">
+<div id="imagevlak" class="verbergItem pages" style='padding: 15px'>
+	<form name="upload" method="POST" enctype="multipart/form-data">
+		<label for='image[]'>Select image to upload: </label><br /><input type="file" name="image[]" multiple><br /><hr><br />
+		<input type="submit" name="upload" value="upload">
+	</form>
+	<?php
+	if(!empty($result->error)){
+		foreach($result->error as $errMsg){
+			echo $errMsg;
+		}
+	}
+	if(!empty($result->info)){
+		foreach($result->info as $infoMsg){
+			echo $infoMsg;
+		}
+	}
+	?>
+</div>
+<div id="imageselectvlak" class="verbergItem pages" style='padding: 15px'>
+	<form name="imageselect" method="post">
+		<?php
+		$query = "SELECT picturecount FROM kafelogin";
+		if($query = mysqli_query($conn, $query)) {
+			$numpicsarr = mysqli_fetch_row($query);
+		}
+		if(isset($numpicsarr)) {
+			$numpics = $numpicsarr[0];
+		} else {
+			$numpics = 0;
+		}
+		?>
+		<label for="amount">Selecteer hoeveel foto's</label><input type='number' name='amount' value='<?php echo $numpics; ?>'><br /><hr><br />
+		<?php
+		$query = "SELECT id, active FROM images";
+		if($query = mysqli_query($conn, $query)) {
+			$numrows = mysqli_num_rows($query);
+			while($result = mysqli_fetch_assoc($query)) {
+				$picId = $result['id'];
+				$activeImg = $result['active'];
+				if($activeImg == 1) {
+					$checked = 'checked';
+				} else {
+					$checked = '';
+				}
+				echo "<div style='float:left; margin: 5px;' class='imagediv'><img style='max-width: 200px; max-height: 200px' src='image.php?id=$picId' name='image' /><br />
+				<input style='margin-left: calc(50% - 7px);margin-top: 5px;' type='checkbox' value='$picId' name='pictureids[]' $checked></div>";
+			}
+		}
+		?>
+		<br />
+		<hr style='width: 100%;overflow: auto;'>
+		<br />
+		<input type='submit' name='imageselect' value='Select'>
+	</form>
+</div>
+<div id="deletevlak" class="verbergItem pages" style='padding: 15px'>
 	<?php
 	$query = "SELECT * FROM evenement";
 	if($query = mysqli_query($conn, $query)) {
@@ -106,26 +171,35 @@
 		$numrows = mysqli_num_rows($query);
 		for($i=0;$i<$c;$i++) {
 			echo "<a name='deletevlak' href='?artikel=" . $i . "'>Art. $i</a> ";
-		}		
+		}	
+		if(isset($count) && $count !== '') {
+			$restitel = $resarray[$count]['titel'];
+			$resdate = $resarray[$count]['datetime'];
+			$resid = $resarray[$count]['id'];
+		} else {
+			$restitel = '';
+			$resdate = '';
+			$resid = '';
+		}
 		//var_Dump($resarray);
-		echo '<hr>Titel: <br />' . $resarray[$count]['titel'] . '<br /><hr>';
+		echo '<hr>Titel: <br />' . $restitel . '<br /><hr>';
 		//echo 'Text: <br />' . $resarray[$count]['text'] . '<br /><hr>';
-		echo 'Datum: ' . $resarray[$count]['datetime'] . '<br />';
+		echo 'Datum: ' . $resdate . '<br />';
 		$query = "SELECT showone FROM kafelogin";
 		if($query = mysqli_query($conn, $query)) {
 			$res = mysqli_fetch_assoc($query);
 			if($res['showone'] == 1) {
 			echo '<form action="" method="post">
-			<input type="hidden" name="id" value="'.$resarray[$count]['id'].'">
+			<input type="hidden" name="id" value="'.$resid.'">
 			<input id="showbutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" <?php echo 'value="Show" name="showbutton">
-			<a name="postvlak" href="?artikel="' .$resarray[$count]['id']. '"><input id="editbutton" type="submit" value="Edit" name="editbutton"></a>
+			<a name="postvlak" href="?artikel="' .$resid. '"><input id="editbutton" type="submit" value="Edit" name="editbutton"></a>
 			</form>';
 			}
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
 		echo '<form action="" method="post">
-		<input type="hidden" name="id" value="'.$resarray[$count]['id'].'">
+		<input type="hidden" name="id" value="'.$resid.'">
 		<input id="deletebutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" <?php echo 'value="Delete" name="deletebutton">
 		</form>';
 	} else {
@@ -145,7 +219,31 @@
 }
 
 //Begin Database troep
+if(isset($_POST['upload'])) {
 
+	set_time_limit(60);
+	require_once "config.php";
+	require_once "imgupload.class.php";
+	$img = new ImageUpload;
+
+	$result = $img->uploadImages($_FILES['image']);
+
+	if(!empty($result->info)){
+	    foreach($result->info as $infoMsg){
+	        echo $infoMsg .'<br />';
+	    }
+	}
+
+	echo "<div id='continue'>Your images can be viewed here:<br/><br/>";
+
+	if(!empty($result->ids)){
+	    foreach($result->ids as $id){
+	        echo "http://localhost:8000/admin/image.php?id=". $id;
+	    }
+	}
+
+	echo "<br /><a href='/admin/'>Go Back!</a></div>";
+}
 if(isset($_POST['submit'])) {
 	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && !isset($count)) {
 		$titel = mysqli_real_escape_string ($conn,$_POST['titel']);
@@ -173,12 +271,27 @@ if(isset($_POST['submit'])) {
 		}
 	}
 }
+if(isset($_POST['imageselect'])) {
+	$picamount = $_POST['amount'];
+	$selectedpics = $_POST['pictureids'];
+	//count($selectedpics);
+	$query1 = "";
+	foreach($selectedpics as $res) {
+		$numres = ((int)$res);
+		$query1 .= "UPDATE images SET `active` = 1 WHERE `id` = $numres; ";
+	}
+	$query1 .= "UPDATE 'kafelogin' SET `picturecount` = $picamount WHERE 1=1;";
+	if(mysqli_multi_query($conn, $query1)) {
+		echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
+	} else {
+		echo("Error description: " . mysqli_error($conn));
+	}
+}
 if(isset($_POST['deletebutton'])) {
 	$id = $_POST['id'];
 	$query = "DELETE FROM 'evenement' WHERE id = $id;";
 	if(mysqli_query($conn, $query)) {
-		echo "Success!";
-		header("refresh:3;admin-panel.php");
+		echo "<div id='continue'>Post with id: " . $id . "Deleted <br /><a href='/admin/'>Go Back!</a></div>";
 	} else {
 		echo("Error description: " . mysqli_error($conn));
 	}
@@ -189,7 +302,7 @@ if(isset($_POST['showbutton'])) {
 	if(mysqli_query($conn, $query)) {
 		$query = "UPDATE evenement SET actief = 1 WHERE id = $id; ";
 		if(mysqli_query($conn, $query)) {
-			echo "Success!";
+			echo "<div id='continue'>Gelukt! <br /><a href='/admin/'>Go Back!</a></div>";
 			header("refresh:3;admin-panel.php");
 		} else {
 			echo("Error description: " . mysqli_error($conn));
@@ -240,7 +353,7 @@ if(isset($_POST['showonebutton'])) {
 			$c++;
 		}
 		$numrows = mysqli_num_rows($query);
-		if(isset($count)) { echo $textareatext = $resarray[$count]['text']; } else { $textareatext = '';}
+		if(isset($count) && $count !== '') { echo $textareatext = $resarray[$count]['text']; } else { $textareatext = '';}
 	?>
     <script>
 		easyMDE.value('<?php echo json_encode($textareatext); ?>');
