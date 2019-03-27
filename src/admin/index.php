@@ -53,11 +53,6 @@
 						<a id="imageuploadknop" style="cursor: pointer" name='imagevlak'><i class="fa fa-group"></i>
 						Foto upload
 						</a>
-					</li>
-					<li>
-						<a id="showvlakknop" style="cursor: pointer" name='showvlak'><i class="fa fa-group"></i>
-						Opties
-						</a>
 					</li>					
 				</ul>	
 				<div id ="personal" style="position: absolute; bottom: 0; margin-bottom: 10px">
@@ -206,10 +201,6 @@
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
-	echo'</div><div id="showvlak" class="verbergItem pages"><form method="post">
-		<button name="showonebutton" value="showone">Laat 1 zien</button>
-		<button name="showonebutton" value="showmore">Laat alles zien</button>
-	</form></div>';
 } else if (isset($_POST['logoff']) && $_POST['logoff'] == 'Logout') {
 	unset($_SESSION['username']);
 		echo "Logout successful";
@@ -380,43 +371,6 @@ if(isset($_POST['deletebutton'])) {
 		echo "<div id='continue'>Post with id: " . $id . "Deleted <br /><a href='/admin/'>Go Back!</a></div>";
 	} else {
 		echo("Error description: " . mysqli_error($conn));
-	}
-}
-if(isset($_POST['showbutton'])) {
-	$id = $_POST['id'];
-	$query = "UPDATE `evenement` SET actief = 0 WHERE actief = 1; ";
-	if(mysqli_query($conn, $query)) {
-		$query = "UPDATE evenement SET actief = 1 WHERE id = $id; ";
-		if(mysqli_query($conn, $query)) {
-			echo "<div id='continue'>Gelukt! <br /><a href='/admin/'>Go Back!</a></div>";
-			header("refresh:3;admin-panel.php");
-		} else {
-			echo("Error description: " . mysqli_error($conn));
-		}
-	} else {
-		echo("Error description: " . mysqli_error($conn));
-	}
-}
-if(isset($_POST['showbutton'])) {
-	$id = $_POST['id'];
-}
-if(isset($_POST['showonebutton'])) {
-	if($_POST['showonebutton'] == 'showone') {
-		$query = "UPDATE kafelogin SET showone = 1;";
-		if(mysqli_query($conn, $query)) {
-			echo "Success!";
-			header("refresh:3;admin-panel.php");
-		} else {
-			echo("Error description: " . mysqli_error($conn));
-		}
-	} else if($_POST['showonebutton'] == 'showmore') {
-		$query = "UPDATE kafelogin SET showone = 0;";
-		if(mysqli_query($conn, $query)) {
-			echo "Success!";
-			//header("refresh:3;admin-panel.php");
-		} else {
-			echo("Error description: " . mysqli_error($conn));
-		}
 	}
 }
 if(isset($_POST['sessionreset'])) {
