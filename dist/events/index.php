@@ -163,7 +163,7 @@
 		<div class="container">
 			<div class="row text-center text-xs-center text-sm-left text-md-left">
 				<div class="col-xs-12 col-sm-4 col-md-4">
-					<h5>Quick links</h5>
+					<h5>Snelle links</h5>
 					<ul class="list-unstyled quick-links">
 						<li><a href="/"><i class="fa fa-angle-double-right"></i>Hoofdpagina</a></li>
 						<li><a href="/about"><i class="fa fa-angle-double-right"></i>Over ons</a></li>

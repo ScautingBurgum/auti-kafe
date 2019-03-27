@@ -70,7 +70,7 @@
     							<h1>Admin login</h1>
     						 </div>
     					</div>
-                       <form action="" method="post" name="login">
+                       <form action="/scripts/login-check.php"  method="post" name="login">
                                <div class="form-group">
                                   <label for="exampleInputEmail1">Email address</label>
                                   <input type="email" name="email"  class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
@@ -81,7 +81,7 @@
                                </div>
                                <div class="col-md-12 text-center ">
                                  <div class="col-md-12 ">
-                                  <button type="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
+                                  <button type="submit" name="submit" class=" btn btn-block mybtn btn-primary tx-tfm">Login</button>
                                </div>
                             </form>
     				</div>
@@ -89,82 +89,6 @@
     			</div>
     		</div>
           </div>
-          <script>
-          $("#signup").click(function() {
-$("#first").fadeOut("fast", function() {
-$("#second").fadeIn("fast");
-});
-});
-
-$("#signin").click(function() {
-$("#second").fadeOut("fast", function() {
-$("#first").fadeIn("fast");
-});
-});
-
-
-
-         $(function() {
-           $("form[name='login']").validate({
-             rules: {
-
-               email: {
-                 required: true,
-                 email: true
-               },
-               password: {
-                 required: true,
-
-               }
-             },
-              messages: {
-               email: "Please enter a valid email address",
-
-               password: {
-                 required: "Please enter password",
-
-               }
-
-             },
-             submitHandler: function(form) {
-               form.submit();
-             }
-           });
-         });
-
-
-
-$(function() {
-
-  $("form[name='registration']").validate({
-    rules: {
-      firstname: "required",
-      lastname: "required",
-      email: {
-        required: true,
-        email: true
-      },
-      password: {
-        required: true,
-        minlength: 5
-      }
-    },
-
-    messages: {
-      firstname: "Please enter your firstname",
-      lastname: "Please enter your lastname",
-      password: {
-        required: "Please provide a password",
-        minlength: "Your password must be at least 5 characters long"
-      },
-      email: "Please enter a valid email address"
-    },
-
-    submitHandler: function(form) {
-      form.submit();
-    }
-  });
-});
-</script>
   </body>
+
 </html>
