@@ -217,7 +217,11 @@
 } else {
 	echo "<a href='login.php'>Login aub</a>";
 }
-
+if(isset($count) && $count != '') {
+	echo $count . 'DE COUNT';
+} else {
+	echo 'Count not set';
+}
 //Begin Database troep
 if(isset($_POST['upload'])) {
 
@@ -245,19 +249,19 @@ if(isset($_POST['upload'])) {
 	echo "<br /><a href='/admin/'>Go Back!</a></div>";
 }
 if(isset($_POST['submit'])) {
-	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && !isset($count)) {
+	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && strlen($count) < 1) {
+		echo 'Test';
 		$titel = mysqli_real_escape_string ($conn,$_POST['titel']);
 		$text = mysqli_real_escape_string ($conn,$_POST['text']);
 		$date = $_POST['date'];
 		$query = "INSERT INTO evenement (`titel`, `datetime`, `text`)
 		VALUES ('$titel', '$date', '$text')";
 		if(mysqli_query($conn, $query)) {
-			echo "<div id='continue'>Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
+			echo "<div id='continue'>Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Inserted!<a href='/admin/'>Go Back!</a></div>";
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
-	}
-	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && isset($count)) {
+	}else if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && isset($count) && strlen($count) >= 1) {
 		$titel = mysqli_real_escape_string ($conn,$_POST['titel']);
 		$text = mysqli_real_escape_string ($conn,$_POST['text']);
 		$date = $_POST['date'];
@@ -265,7 +269,7 @@ if(isset($_POST['submit'])) {
 		SET `titel` = '$titel', `text` = '$text', `datetime` = '$date'
 		WHERE `id` = '$count'; ";
 		if(mysqli_query($conn, $query)) {
-			echo "<div id='continue'>Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
+			echo "<div id='continue'>Id: ".$count."<br />Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
