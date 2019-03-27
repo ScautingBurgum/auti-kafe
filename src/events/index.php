@@ -31,65 +31,58 @@
 
     <!-- Start php stukje -->
     <?php
-    $query = "SELECT * FROM evenement";
-    if($query = mysqli_query($conn, $query)) {
-      $c = 0;
-      while($result = mysqli_fetch_assoc($query)) {
-        $resarray[] = $result;
-        $c++;
-      }
-      if(isset($showone) && $showone == 0) {
-        for($i=0;$i<$c;$i++) {
-          echo "<a href='?artikel=" . $i . "'>Art. $i</a> ";
-        }
-        // Content met meerdere artikels
-        echo '<hr>Titel: <br />' . $resarray[$count]['titel'] . '<br /><hr>';
-        echo 'Text: <br />' . $resarray[$count]['text'] . '<br /><hr>';
-        echo 'Datum: ' . $resarray[$count]['datetime'] . '<br />';
-      } else if (isset($showone) && $showone == 1) {
         $query = "SELECT * FROM evenement";
         if($query = mysqli_query($conn, $query)) {
         //Content met 1 artikel
         $i = 0;
           while($row = mysqli_fetch_assoc($query)) {
+            $evenementid = $row['id'];
+            $titel = $row['titel'];
+            $text = $row['text'];
+            //$text = MarkdownExtended::parseString( $text , $options );
+            $date = date_format(date_create($row['datetime']), 'd-m-Y');
 
-          $titel = $row['titel'];
-          $text = $row['text'];
-          //$text = MarkdownExtended::parseString( $text , $options );
-          $date = date_format(date_create($row['datetime']), 'd-m-Y');
-          //echo $titel;
-          //echo $text;
-          //echo $date;
-          ?>
+            $imgquery = "SELECT `id` FROM `images` WHERE `artikel_id` = $evenementid";
+            if($imgquery = mysqli_query($conn, $imgquery)) {
+                $result = mysqli_fetch_assoc($imgquery);
+                if(isset($result['id'])) {
+                  $picId = $result['id'];
+                }else {
+                  $picId = 3; //VOEG DEFAULT IMAGE IN
+                }                
+              } 
+            //echo $titel;
+            //echo $text;
+            //echo $date;
+            ?>
 
 
-      <div class="container">
-        <div class="product-item">
-          <div class="product-item-title d-flex">
-            <div class="bg-faded p-5 d-flex <?php echo ($i%2 == 0 ?'ml':'mr');?>-auto rounded">
-              <h2 class="section-heading mb-0">
-                <span class="section-heading-upper"><?php echo $date;  ?></span>
-                <span class="section-heading-lower"><?php echo $titel; ?></span>
-              </h2>
+            <div class="container">
+              <div class="product-item">
+                <div class="product-item-title d-flex">
+                  <div class="bg-faded p-5 d-flex <?php echo ($i%2 == 0 ?'ml':'mr');?>-auto rounded">
+                    <h2 class="section-heading mb-0">
+                      <span class="section-heading-upper"><?php echo $date;  ?></span>
+                      <span class="section-heading-lower"><?php echo $titel; ?></span>
+                    </h2>
+                  </div>
+                </div>
+                <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="<?php echo '../admin/image.php?id=' . $picId; ?>" alt="">
+                <!--<img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="/img/aandebar.jpg" alt="">-->
+                <div class="product-item-description d-flex <?php echo ($i%2 == 0 ?'mr':'ml');?>-auto">
+                  <div class="bg-faded p-5 rounded" id="content">
+                    <p id='markdown<?php echo $i;?>' class="mb-0"></p>
+                    <script type="text/javascript">
+                      console.log(marked);
+                      document.getElementById('markdown<?php echo $i;?>').innerHTML = marked(`<?php echo $text;?>`);
+                    </script>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="/img/aandebar.jpg" alt="">
-          <div class="product-item-description d-flex <?php echo ($i%2 == 0 ?'mr':'ml');?>-auto">
-            <div class="bg-faded p-5 rounded" id="content">
-              <p id='markdown<?php echo $i;?>' class="mb-0"></p>
-              <script type="text/javascript">
-              console.log(marked);
-    document.getElementById('markdown<?php echo $i;?>').innerHTML = marked(`<?php echo $text;?>`);
-  </script>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br/>
+            <br/>
         <?php
         $i++;
-      }
-        }
       }
     } else {
       echo("Error description: " . mysqli_error($conn));
