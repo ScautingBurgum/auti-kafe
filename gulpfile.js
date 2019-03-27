@@ -38,6 +38,15 @@ gulp.task('vendor', function(cb) {
     ])
     .pipe(gulp.dest('./dist/vendor/jquery'))
 
+    gulp.src([
+        './node_modules/marked/marked.min.js'
+      ])
+      .pipe(gulp.dest('./dist/vendor/marked'))
+      gulp.src([
+          './node_modules/easymde/dist/*'
+        ])
+        .pipe(gulp.dest('./dist/vendor/easymde'))
+
   cb();
 
 });
@@ -106,7 +115,7 @@ function watchFiles() {
 var template = require('gulp-html-header');
 
 function temp() {
-    gulp.src('./src/**/*.html')
+    gulp.src(['./src/**/*.html','!./src/templates'])
         .pipe(template())
         .pipe(gulp.dest('dist'))
     gulp.src('./src/**/*.php')
