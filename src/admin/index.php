@@ -235,6 +235,7 @@ if(isset($_POST['upload'])) {
 
 	echo "<br /><a href='/admin/'>Go Back!</a></div>";
 }
+
 if(isset($_POST['submit'])) {
 	if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && strlen($count) < 1) {
 		echo 'Test';
@@ -244,7 +245,7 @@ if(isset($_POST['submit'])) {
 		$query = "INSERT INTO evenement (`titel`, `datetime`, `text`)
 		VALUES ('$titel', '$date', '$text')";
 		if(mysqli_query($conn, $query)) {
-			echo "<div id='continue'>Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Inserted!<a href='/admin/'>Go Back!</a></div>";
+			echo "<div id='continue'>Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /></div>";
 			echo  $conn->insert_id;
 			unset($_SESSION['artformid']);
 			if(isset($_SESSION['artformid'])) {
@@ -259,16 +260,30 @@ if(isset($_POST['submit'])) {
 		$picamount = $_POST['amount'];
 		if(isset($_POST['pictureids'])) {
 			$selectedpics = $_POST['pictureids'];
-
-			//count($selectedpics);
 			$query1 = "";
+			$count2 = array();
 			foreach($selectedpics as $res) {
 				$numres = ((int)$res);
-				$query1 .= "UPDATE images SET `artikel_id` = $count WHERE `id` = $latestuniqueid; ";
+				$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res";
+				
+				if($currentartids = mysqli_query($conn,$currentartids)) {				
+					$results = mysqli_fetch_assoc($currentartids);
+					$results = explode(',',$results['artikel_id']);
+					if(!in_array($count, $count2)) {
+						$count2[] = $count;
+					}
+				}
+				if(isset($results)) {
+					$count2 = array_merge($results, $count2);		
+				}
+				$count3 = implode(',',$count2);	
+				$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $latestuniqueid; ";	
+				unset($count2); // $foo is gone
+				$count2 = array();
 			}
 			echo $query1 .= "UPDATE `evenement` SET `picturecount` = $picamount WHERE id = $count;";
 			if(mysqli_multi_query($conn, $query1)) {
-				echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
+				echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Inserted!</div>";
 				unset($_SESSION['artformid']);
 				if(isset($_SESSION['artformid'])) {
 					echo "<script>alert('SESSION NOT DESTROYED');";
@@ -279,25 +294,27 @@ if(isset($_POST['submit'])) {
 				echo("Error description: " . mysqli_error($conn));
 			}
 		}
-		set_time_limit(60);
-		require_once "config.php";
-		require_once "imgupload.class.php";
-		$img = new ImageUpload;
+		if(isset($_POST['image'])) {
+			set_time_limit(60);
+			require_once "config.php";
+			require_once "imgupload.class.php";
+			$img = new ImageUpload;
 
-		$result = $img->uploadImages($_FILES['image']);
+			$result = $img->uploadImages($_FILES['image']);
 
-		if(!empty($result->info)){
-		    foreach($result->info as $infoMsg){
-		        echo $infoMsg .'<br />';
-		    }
-		}
+			if(!empty($result->info)){
+			    foreach($result->info as $infoMsg){
+			        echo $infoMsg .'<br />';
+			    }
+			}
 
-		echo "<div id='continue'>Your images can be viewed here:<br/><br/>";
+			echo "<div id='continue'>Your images can be viewed here:<br/><br/>";
 
-		if(!empty($result->ids)){
-		    foreach($result->ids as $id){
-		        echo "http://localhost:8000/admin/image.php?id=". $id;
-		    }
+			if(!empty($result->ids)){
+			    foreach($result->ids as $id){
+			        echo "http://localhost:8000/admin/image.php?id=". $id;
+			    }
+			}
 		}
 
 		echo "<br /><a href='/admin/'>Go Back!</a></div>";
@@ -309,7 +326,7 @@ if(isset($_POST['submit'])) {
 		SET `titel` = '$titel', `text` = '$text', `datetime` = '$date'
 		WHERE `id` = '$count'; ";
 		if(mysqli_query($conn, $query)) {
-			echo "<div id='continue'>Id: ".$count."<br />Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
+			echo "<div id='continue'>Id: ".$count."<br />Titel: " . $titel . "<br />Text:" . $text . "<br />Datum: " . $date . "<br /></div>";
 			unset($_SESSION['artformid']);
 			if(isset($_SESSION['artformid'])) {
 				echo "<script>alert('SESSION NOT DESTROYED');";
@@ -322,15 +339,30 @@ if(isset($_POST['submit'])) {
 		}
 		$picamount = $_POST['amount'];
 		$selectedpics = $_POST['pictureids'];
-		//count($selectedpics);
+		$count2 = array();		
 		$query1 = "";
 		foreach($selectedpics as $res) {
 			$numres = ((int)$res);
-			$query1 .= "UPDATE images SET `artikel_id` = $count WHERE `id` = $numres; ";
+			$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res";
+			
+			if($currentartids = mysqli_query($conn,$currentartids)) {				
+				$results = mysqli_fetch_assoc($currentartids);
+				$results = explode(',',$results['artikel_id']);
+				if(!in_array($count, $count2)) {
+					$count2[] = $count;
+				}
+			}
+			if(isset($results)) {
+				$count2 = array_merge($results, $count2);		
+			}
+			$count3 = implode(',',$count2);	
+			$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $numres; ";	
+			unset($count2); // $foo is gone
+			$count2 = array();
 		}
-		echo $query1 .= "UPDATE `evenement` SET `picturecount` = $picamount WHERE id = $count;";
+		$query1 .= "UPDATE `evenement` SET `picturecount` = $picamount WHERE id = $count;";
 		if(mysqli_multi_query($conn, $query1)) {
-			echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Updated!<a href='/admin/'>Go Back!</a></div>";
+			echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Updated!</div>";
 			unset($_SESSION['artformid']);
 			if(isset($_SESSION['artformid'])) {
 				echo "<script>alert('SESSION NOT DESTROYED');";
@@ -340,25 +372,27 @@ if(isset($_POST['submit'])) {
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
-		set_time_limit(60);
-		require_once "config.php";
-		require_once "imgupload.class.php";
-		$img = new ImageUpload;
+		if(isset($_POST['image'])) {
+			set_time_limit(60);
+			require_once "config.php";
+			require_once "imgupload.class.php";
+			$img = new ImageUpload;
 
-		$result = $img->uploadImages($_FILES['image']);
+			$result = $img->uploadImages($_FILES['image']);
 
-		if(!empty($result->info)){
-		    foreach($result->info as $infoMsg){
-		        echo $infoMsg .'<br />';
-		    }
-		}
+			if(!empty($result->info)){
+			    foreach($result->info as $infoMsg){
+			        echo $infoMsg .'<br />';
+			    }
+			}
 
-		echo "<div id='continue'>Your images can be viewed here:<br/><br/>";
+			echo "<div id='continue'>Your images can be viewed here:<br/><br/>";
 
-		if(!empty($result->ids)){
-		    foreach($result->ids as $id){
-		        echo "http://localhost:8000/admin/image.php?id=". $id;
-		    }
+			if(!empty($result->ids)){
+			    foreach($result->ids as $id){
+			        echo "http://localhost:8000/admin/image.php?id=". $id;
+			    }
+			}
 		}
 
 		echo "<br /><a href='/admin/'>Go Back!</a></div>";

@@ -72,7 +72,7 @@
 
     <!-- Start php stukje -->
     <?php
-        $query = "SELECT * FROM evenement";
+        $query = "SELECT * FROM evenement WHERE datetime >= CURDATE() ORDER BY `datetime` ASC ";
         if($query = mysqli_query($conn, $query)) {
         //Content met 1 artikel
         $i = 0;
@@ -82,8 +82,7 @@
             $text = $row['text'];
             //$text = MarkdownExtended::parseString( $text , $options );
             $date = date_format(date_create($row['datetime']), 'd-m-Y');
-
-            $imgquery = "SELECT `id` FROM `images` WHERE `artikel_id` = $evenementid";
+            $imgquery = "SELECT `id` FROM `images` WHERE `artikel_id` LIKE '%$evenementid%'";
             if($imgquery = mysqli_query($conn, $imgquery)) {
                 $result = mysqli_fetch_assoc($imgquery);
                 if(isset($result['id'])) {
