@@ -6,19 +6,20 @@
     <meta name="author" content="">
 
     <title>Auti Kafé - Admin</title>
-    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="/style.css">
     <link rel="template" href="templates/styling.html">
-    <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
-	<script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
+    <link rel="stylesheet" href="/vendor/easymde.dist/easymde.min.css">
+	  <script src="/vendor/easymde/dist/easymde.min.js"></script>
     <?php
-	require_once('../scripts/dbcon.php');	
-	if(isset($_POST['artformid'])) {
-		$count = $_POST['artformid'];
-	} else if(isset($_SESSION['artformid'])) {
-		$count = $_SESSION['artformid'];
-	} else {
-		$count = null;
-	}
+	require_once('../scripts/dbcon.php');
+  if(isset($_SESSION['artformid'])) {
+    $count = $_SESSION['artformid'];
+  }if(isset($_POST['artformid'])) {
+  $count = $_POST['artformid'];
+  $_SESSION['artformid'] = $_POST['artformid'];
+} else {
+  $count = '';
+}
 	?>
 </head>
 <body>
@@ -53,8 +54,8 @@
 						<a id="imageuploadknop" style="cursor: pointer" name='imagevlak'><i class="fa fa-group"></i>
 						Foto upload
 						</a>
-					</li>					
-				</ul>	
+					</li>
+				</ul>
 				<div id ="personal" style="position: absolute; bottom: 0; margin-bottom: 10px">
 				<?php
 				echo "My username: " . $_SESSION['username'] . "<br />";
@@ -65,7 +66,7 @@
 				</form>
 				</div>
 			</td>
-			
+
 		</tr>
 		<tr>
 			<td>
@@ -79,7 +80,7 @@
 <div id="postvlak" class="verbergItem pages" style='padding: 15px'>
 	<form name="upload" enctype="multipart/form-data" method="post">
 	<?php
-	//<?php if(isset($count)) { echo $resarray[$count]['text']; } 
+	//<?php if(isset($count)) { echo $resarray[$count]['text']; }
 	$query = "SELECT * FROM `evenement` WHERE id = $count";
 	if($query = mysqli_query($conn, $query)) {
 		$items = mysqli_fetch_array($query);
@@ -113,12 +114,11 @@
 				}
 			}
 			echo"<div style='display: table-cell;width: 100%;'>";
-			$query = "SELECT id, active, artikel_id FROM images";
+			$query = "SELECT id,artikel_id FROM images";
 			if($query = mysqli_query($conn, $query)) {
 				$numrows = mysqli_num_rows($query);
 				while($result = mysqli_fetch_assoc($query)) {
 					$picId = $result['id'];
-					$activeImg = $result['active'];
 					$artikel_id = $result['artikel_id'];
 					if($artikel_id == $count && strlen($count) >= 1) {
 						$checked = 'checked';
@@ -130,11 +130,11 @@
 				}
 			}
 			echo "</div><hr><br/>";
-		
+
 		?>
 	<input id="submit" type="submit" name="submit" value="Submit"></form>
 	<?php
-	
+
 	?>
 </div>
 <div id="imagevlak" class="verbergItem pages" style='padding: 15px'>
@@ -190,7 +190,7 @@
 			<input id="showbutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" <?php echo 'value="Show" name="showbutton">
 			<a name="postvlak"><input id="editbutton" type="submit" value="Edit" name="editbutton"></a>
 			</form>';
-				
+
 			} else {
 				echo("Error description: " . mysqli_error($conn));
 			}
@@ -205,7 +205,7 @@
 	unset($_SESSION['username']);
 		echo "Logout successful";
 		header("refresh:3;index.php");
-	
+
 } else {
 	echo "<a href='login.php'>Login aub</a>";
 }
@@ -252,7 +252,7 @@ if(isset($_POST['submit'])) {
 				echo "<script>alert('SESSION NOT DESTROYED');";
 			} else {
 				echo "Session destroyed";
-			}		
+			}
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
@@ -264,6 +264,7 @@ if(isset($_POST['submit'])) {
 			$count2 = array();
 			foreach($selectedpics as $res) {
 				$numres = ((int)$res);
+<<<<<<< HEAD
 				$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res";
 				
 				if($currentartids = mysqli_query($conn,$currentartids)) {				
@@ -280,8 +281,11 @@ if(isset($_POST['submit'])) {
 				$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $latestuniqueid; ";	
 				unset($count2); // $foo is gone
 				$count2 = array();
+=======
+				$query1 .= "UPDATE images SET `artikel_id` = $latestuniqueid WHERE `id` = $numres; ";
+>>>>>>> b80567754c9713c4e611847f087fcf7ea86c9a27
 			}
-			echo $query1 .= "UPDATE `evenement` SET `picturecount` = $picamount WHERE id = $count;";
+			echo $query1 .= "UPDATE evenement SET `picturecount` = $picamount WHERE `id` = $latestuniqueid;";
 			if(mysqli_multi_query($conn, $query1)) {
 				echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Inserted!</div>";
 				unset($_SESSION['artformid']);
@@ -289,7 +293,7 @@ if(isset($_POST['submit'])) {
 					echo "<script>alert('SESSION NOT DESTROYED');";
 				} else {
 					echo "Session destroyed";
-				}		
+				}
 			} else {
 				echo("Error description: " . mysqli_error($conn));
 			}
@@ -333,7 +337,7 @@ if(isset($_POST['submit'])) {
 			} else {
 				echo "Session destroyed";
 			}
-			
+
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
@@ -360,7 +364,11 @@ if(isset($_POST['submit'])) {
 			unset($count2); // $foo is gone
 			$count2 = array();
 		}
+<<<<<<< HEAD
 		$query1 .= "UPDATE `evenement` SET `picturecount` = $picamount WHERE id = $count;";
+=======
+		echo $query1 .= "UPDATE evenement SET `picturecount` = $picamount WHERE id = $count;";
+>>>>>>> b80567754c9713c4e611847f087fcf7ea86c9a27
 		if(mysqli_multi_query($conn, $query1)) {
 			echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Updated!</div>";
 			unset($_SESSION['artformid']);
@@ -368,7 +376,7 @@ if(isset($_POST['submit'])) {
 				echo "<script>alert('SESSION NOT DESTROYED');";
 			} else {
 				echo "Session destroyed";
-			}		
+			}
 		} else {
 			echo("Error description: " . mysqli_error($conn));
 		}
@@ -413,7 +421,7 @@ if(isset($_POST['sessionreset'])) {
 	}
 }
 
-// Einde Database Troep 
+// Einde Database Troep
 ?>
 </div>
 <link rel="template" href="templates/footer.html">
@@ -422,7 +430,7 @@ if(isset($_POST['sessionreset'])) {
 
     <link rel="template" href="templates/scripts.html">
     <script src="adminpanel.js"></script>
-    <?php 
+    <?php
     if(isset($_SESSION['artformid'])) {
     	$count = $_SESSION['artformid'];
     }if(isset($_POST['artformid'])) {
@@ -431,7 +439,7 @@ if(isset($_POST['sessionreset'])) {
 	} else {
 		$count = '';
 	}
-	//<?php if(isset($count)) { echo $resarray[$count]['text']; } 
+	//<?php if(isset($count)) { echo $resarray[$count]['text']; }
 	$query = "SELECT `text` FROM `evenement` WHERE `id` = " . $_SESSION['artformid'];
 	if($query = mysqli_query($conn, $query)) {
 		$items = mysqli_fetch_array($query);
