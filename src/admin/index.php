@@ -199,7 +199,7 @@
 			<input id="deletebutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" <?php echo 'value="Delete" name="deletebutton">
 			</form>';
 		} else {
-			echo("Error description: " . mysqli_error($conn));
+			//echo("Error description: " . mysqli_error($conn));
 		}
 } else if (isset($_POST['logoff']) && $_POST['logoff'] == 'Logout') {
 	unset($_SESSION['username']);
@@ -264,7 +264,6 @@ if(isset($_POST['submit'])) {
 			$count2 = array();
 			foreach($selectedpics as $res) {
 				$numres = ((int)$res);
-<<<<<<< HEAD
 				$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res";
 				
 				if($currentartids = mysqli_query($conn,$currentartids)) {				
@@ -281,9 +280,7 @@ if(isset($_POST['submit'])) {
 				$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $latestuniqueid; ";	
 				unset($count2); // $foo is gone
 				$count2 = array();
-=======
 				$query1 .= "UPDATE images SET `artikel_id` = $latestuniqueid WHERE `id` = $numres; ";
->>>>>>> b80567754c9713c4e611847f087fcf7ea86c9a27
 			}
 			echo $query1 .= "UPDATE evenement SET `picturecount` = $picamount WHERE `id` = $latestuniqueid;";
 			if(mysqli_multi_query($conn, $query1)) {
@@ -364,11 +361,7 @@ if(isset($_POST['submit'])) {
 			unset($count2); // $foo is gone
 			$count2 = array();
 		}
-<<<<<<< HEAD
 		$query1 .= "UPDATE `evenement` SET `picturecount` = $picamount WHERE id = $count;";
-=======
-		echo $query1 .= "UPDATE evenement SET `picturecount` = $picamount WHERE id = $count;";
->>>>>>> b80567754c9713c4e611847f087fcf7ea86c9a27
 		if(mysqli_multi_query($conn, $query1)) {
 			echo "<div id='continue'>Max amount pictures: " . $picamount . "<br />Selected pics:" . $numres . "<br /> Updated!</div>";
 			unset($_SESSION['artformid']);
