@@ -45,6 +45,9 @@ $( document ).ready(function() {
 	} else {
 		localStorage.setItem('postVlakActief', false);
 	}
-});
 
+});
 var easyMDE = new EasyMDE({element: document.getElementById('text'), placeholder: "Voer hier uw text in (Bij bewerken klik hier om het te laten zien)"});
+for (var key in localStorage) {
+	  console.log(key + ':' + localStorage[key]);
+	}
