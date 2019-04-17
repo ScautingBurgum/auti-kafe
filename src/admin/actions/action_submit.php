@@ -51,7 +51,6 @@ if(isset($_POST['picturedelids'])) {
 				echo $errMsg;
 			}
 		}
-		echo 'Image with ID: ' . $id . ' Deleted! <br />';
 	}
 	echo "<a href='/admin/'>Go back!</a>'";
 }
