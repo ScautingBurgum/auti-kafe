@@ -370,8 +370,7 @@ Class ImageUpload {
 
 	/* Delete an image */
 	public function deleteImage($id){
-		$this->stmt = $this->dbh->prepare("SELECT name, original_name, FROM ". DB_TABLE ." WHERE id=:id");
-
+		$this->stmt = $this->dbh->prepare("SELECT name, original_name FROM ". DB_TABLE ." WHERE id=:id");
 		$this->bind(':id', $id);
 
 		try{

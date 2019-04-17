@@ -1,3 +1,4 @@
+<html>
 <head>
 
     <meta charset="utf-8">
@@ -17,18 +18,20 @@
 <!-- Custom styles for this template -->
 <link href="/css/business-casual.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="/vendor/easymde.dist/easymde.min.css">
-	  <script src="/vendor/easymde/dist/easymde.min.js"></script>
-    <?php
+    <link rel="stylesheet" href="/vendor/easymde/dist/easymde.min.css">
+	<script src="/vendor/easymde/dist/easymde.min.js"></script>
+	<?php
 	require_once('../scripts/dbcon.php');
-  if(isset($_SESSION['artformid'])) {
-    $count = $_SESSION['artformid'];
-  }if(isset($_POST['artformid'])) {
-  $count = $_POST['artformid'];
-  $_SESSION['artformid'] = $_POST['artformid'];
-} else {
-  $count = '';
-}
+	if(isset($_SESSION['artformid'])) {
+	    $count = $_SESSION['artformid'];
+	}if(isset($_POST['artformid'])) {
+	  	$count = $_POST['artformid'];
+	  	$_SESSION['artformid'] = $_POST['artformid'];
+	} else if (isset($_POST['id'])) {
+	  	$count = $_POST['id'];
+	} else {
+		$count = '';
+	}
 	?>
 </head>
 <body>
@@ -77,179 +80,69 @@
 					</td>
 				</tr>
 			</thead>
-		<tbody style="display: flex;" id="boardstats_e">
-		<tr id="leftpanel">
-			<td>
-				<ul style="font-size: 20px; list-style-type: none">
-					<li>
-						<a id="artikelKnop" style="cursor: pointer" name='postvlak'><i class="fa fa-group"></i>
-						Post artikel
-						</a>
-					</li>
-					<li>
-						<a id="deletevlakknop" style="cursor: pointer" name='deletevlak'><i class="fa fa-group"></i>
-						Huidige artikels
-						</a>
-					</li>
-					<li>
-						<a id="imageuploadknop" style="cursor: pointer" name='imagevlak'><i class="fa fa-group"></i>
-						Foto upload
-						</a>
-					</li>
-				</ul>
-				<div id ="personal" style="position: absolute; bottom: 0; margin-bottom: 10px">
-				<?php
-				echo "My username: " . $_SESSION['username'] . "<br />";
-				?>
-				<form action='' method='post'>
-				<input type='submit' value='Logout' name='logoff' />
-				<input type='submit' value='Reset Session' name='sessionreset' />
-				</form>
-				</div>
-			</td>
-
-		</tr>
-		<tr>
-			<td>
-				<div id='mainpage'>
-
-				</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
-<div id="postvlak" class="verbergItem pages" style='padding: 15px'>
-	<form name="upload" enctype="multipart/form-data" method="post">
-	<?php
-	//<?php if(isset($count)) { echo $resarray[$count]['text']; }
-	$query = "SELECT * FROM `evenement` WHERE id = $count";
-	if($query = mysqli_query($conn, $query)) {
-		$items = mysqli_fetch_array($query);
-	}
-	?>
-	<label for="titel">Titel:</label><br /><input type="text" id="titel" name="titel" value="<?php if(isset($count) && $count !== '') { echo $items['titel']; } ?>"><br />
-	<hr><label for="text">Text:</label><br /><textarea id="text" cols="60" rows="10" name="text"></textarea><br />
-	<hr><label for="date">Datum:</label><input id="date" type="date" name="date" value="<?php if(isset($count) && $count !== '') { echo $items['datetime']; } ?>"><br />
-		<?php
-		$query = "SELECT picturecount FROM evenement WHERE id = $count";
-		if($query = mysqli_query($conn, $query)) {
-			$numpicsarr = mysqli_fetch_row($query);
-		}
-		if(isset($numpicsarr)) {
-			$numpics = $numpicsarr[0];
-		} else {
-			$numpics = 0;
-		}
-			echo "<label for='amount'>Selecteer hoeveel foto's</label><input type='number' name='amount' value='" . $numpics . "'><br /><hr><br />";
-			?>
-			<label for='image[]'>Select image to upload: </label><br /><input type="file" name="image[]" multiple><br /><hr><br />
-			<?php
-			if(!empty($result->error)){
-				foreach($result->error as $errMsg){
-					echo $errMsg;
-				}
-			}
-			if(!empty($result->info)){
-				foreach($result->info as $infoMsg){
-					echo $infoMsg;
-				}
-			}
-			echo"<div style='display: table-cell;width: 100%;'>";
-			$query = "SELECT id,artikel_id FROM images";
-			if($query = mysqli_query($conn, $query)) {
-				$numrows = mysqli_num_rows($query);
-				while($result = mysqli_fetch_assoc($query)) {
-					$picId = $result['id'];
-					$artikel_id = $result['artikel_id'];
-					if($artikel_id == $count && strlen($count) >= 1) {
-						$checked = 'checked';
-					} else {
-						$checked = '';
-					}
-					echo "<div style='float:left; margin: 5px;' class='imagediv'><img style='max-width: 200px; max-height: 200px' src='image.php?id=$picId' name='image' /><br />
-					<input style='margin-left: calc(50% - 7px);margin-top: 5px;' type='checkbox' value='$picId' name='pictureids[]' $checked></div>";
-				}
-			}
-			echo "</div><hr><br/>";
-
-		?>
-	<input id="submit" type="submit" name="submit" value="Submit"></form>
-	<?php
-
-	?>
-</div>
-<div id="imagevlak" class="verbergItem pages" style='padding: 15px'>
-	<form name="upload" method="POST" enctype="multipart/form-data">
-		<label for='image[]'>Select image to upload: </label><br /><input type="file" name="image[]" multiple><br /><hr><br />
-		<input type="submit" name="upload" value="upload">
-	</form>
-	<?php
-	if(!empty($result->error)){
-		foreach($result->error as $errMsg){
-			echo $errMsg;
-		}
-	}
-	if(!empty($result->info)){
-		foreach($result->info as $infoMsg){
-			echo $infoMsg;
-		}
-	}
-	?>
-</div>
-<div id="deletevlak" class="verbergItem pages" style='padding: 15px'>
-	<?php
-	$artquery = "SELECT * FROM `evenement`";
-	if($artquery = mysqli_query($conn, $artquery)) {
-		while($result = mysqli_fetch_assoc($artquery)) {
-			?>
-			<form method='post' name='artsubmit'>
-				<input type='hidden' name='artformid' value='<?php echo $result['id']; ?>'></input>
-				<input type='submit' value='<?php echo $result['titel']; ?>'></input>
-			</form>
-			<?php
-		}
-	}
-	if(strlen($count) >= 1) {
-		$query = "SELECT * FROM evenement WHERE id = $count";
-		if($query = mysqli_query($conn, $query)) {
-			$items = mysqli_fetch_array($query,MYSQLI_ASSOC);
-			if(isset($count) && $count !== '') {
-				$restitel = $items['titel'];
-				$resdate = $items['datetime'];
-				$resid = $items['id'];
-			} else {
-				$restitel = '';
-				$resdate = '';
-				$resid = '';
-			}
-			//var_Dump($resarray);
-			echo '<hr>Titel: <br />' . $restitel . '<br /><hr>';
-			//echo 'Text: <br />' . $resarray[$count]['text'] . '<br /><hr>';
-			echo 'Datum: ' . $resdate . '<br />';
-			echo '<form action="" method="post">
-			<input type="hidden" name="id" value="'.$resid.'">
-			<input id="showbutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" <?php echo 'value="Show" name="showbutton">
-			<a name="postvlak"><input id="editbutton" type="submit" value="Edit" name="editbutton"></a>
-			</form>';
-
-			} else {
-				echo("Error description: " . mysqli_error($conn));
-			}
-			echo '<form action="" method="post">
-			<input type="hidden" name="id" value="'.$resid.'">
-			<input id="deletebutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" <?php echo 'value="Delete" name="deletebutton">
-			</form>';
-		} else {
-			//echo("Error description: " . mysqli_error($conn));
-		}
+			<tbody style="display: flex;" id="boardstats_e">
+				<tr id="leftpanel">
+					<td>
+						<ul style="font-size: 20px; list-style-type: none">
+							<li>
+								<a id="artikelKnop" href="/admin/?action=post" style="cursor: pointer;color: #000;" name='postvlak'><i class="fa fa-group"></i>
+								Post artikel
+								</a>
+							</li>
+							<li>
+								<a id="deletevlakknop" href="/admin/?action=current" style="cursor: pointer;color: #000;" name='deletevlak'><i class="fa fa-group"></i>
+								Huidige artikels
+								</a>
+							</li>
+							<li>
+								<a id="imageuploadknop" href="/admin/?action=picupload" style="cursor: pointer;color: #000;" name='imagevlak'><i class="fa fa-group"></i>
+								Foto upload
+								</a>
+							</li>
+							<li>
+								<a id="imagedeleteknop" href="/admin/?action=picdelete" style="cursor: pointer;color: #000;" name='imagedelvlak'><i class="fa fa-group"></i>
+								Foto delete
+								</a>
+							</li>
+						</ul>
+						<div id ="personal" style="position: absolute; bottom: 0; margin-bottom: 10px">
+							<?php
+							echo "My username: " . $_SESSION['username'] . "<br />";
+							?>
+							<form action='' method='post'>
+							<input type='submit' value='Logout' name='logoff' />
+							<input type='submit' value='Reset Session' name='sessionreset' />
+							</form>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id='mainpage'>
+							<?php
+							$allowed = array('current', 'picupload', 'post', 'picdelete', 'submit');
+							if (isset($_GET['action'])){
+							    if (!in_array($_GET['action'], $allowed)) {
+							        exit('Not permitted to view this page');
+							    }
+							    include('actions/action_'.$_GET['action'].'.php');
+							}
+							?>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+<?php
 } else if (isset($_POST['logoff']) && $_POST['logoff'] == 'Logout') {
 	unset($_SESSION['username']);
-		echo "Logout successful";
-		header("refresh:3;index.php");
-
+	echo "Logout successful";
+	header("refresh:3;index.php");
 } else {
 	echo "<a href='login.php'>Login aub</a>";
 }
+<<<<<<< HEAD
 //Begin Database troep
 if(isset($_POST['upload'])) {
 
@@ -456,8 +349,9 @@ if(isset($_POST['sessionreset'])) {
 }
 
 // Einde Database Troep
+=======
+>>>>>>> 4e16727568141e7ddbdbce8cc5b81f007b982f4c
 ?>
-</div>
 <!-- <footer class="footer text-faded text-center py-5">
   <div class="container">
     <div class="row">
@@ -550,41 +444,20 @@ if(isset($_POST['sessionreset'])) {
 
     <script src="adminpanel.js"></script>
     <?php
-    if(isset($_SESSION['artformid'])) {
-    	$count = $_SESSION['artformid'];
-    }if(isset($_POST['artformid'])) {
-		$count = $_POST['artformid'];
-		$_SESSION['artformid'] = $_POST['artformid'];
-	} else {
-		$count = '';
-	}
-	//<?php if(isset($count)) { echo $resarray[$count]['text']; }
-	$query = "SELECT `text` FROM `evenement` WHERE `id` = " . $_SESSION['artformid'];
+	$query = "SELECT `text` FROM `evenement` WHERE `id` = " . $count;
 	if($query = mysqli_query($conn, $query)) {
 		$items = mysqli_fetch_array($query);
 		$_SESSION['textareatext'] = $items['text'];
-
 		if(isset($_SESSION['textareatext'])) {
-			echo $textareatext = $_SESSION['textareatext'];
+			$textareatext = $_SESSION['textareatext'];
 		} else {
 			$textareatext = $items['text'];
 		}
+	}
 	?>
     <script>
 		easyMDE.value('<?php echo json_encode($textareatext); ?>');
 		document.getElementById('continue').scrollIntoView();
 	</script>
-	<?php
-	if(isset($_POST['artformid'])) {
-		$count = $_POST['artformid'];
-		$_SESSION['artformid'] = $_POST['artformid'];
-	} else if (isset($_SESSION['artformid'])){
-		$count = $_SESSION['artformid'];
-	}else {
-		$count = '';
-	}
-	}
-	?>
   </body>
-
 </html>
