@@ -1,3 +1,6 @@
+<?php
+if(isset($_SESSION['username'])) {
+?>
 <div id="deletevlak" class="pages" style='padding: 15px'>
 	<?php
 	if(isset($_GET["pagenr"]) && $_GET['pagenr'] != 0 && is_numeric($_GET['pagenr'])) {
@@ -80,3 +83,6 @@
 	}
 ?>
 </div>
+<?php
+}
+?>

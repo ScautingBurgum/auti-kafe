@@ -1,3 +1,6 @@
+<?php
+if(isset($_SESSION['username'])) {
+?>
 <div id="imagedelvlak" class="pages" style='padding: 15px'>
 	<form action="/admin/?action=submit" method="post">
 	<?php
@@ -21,3 +24,6 @@
 	}
 	?>
 </div>
+<?php
+}
+?>

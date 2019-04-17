@@ -135,6 +135,11 @@
 		</table>
 	</div>
 <?php
+	if(isset($_POST['sessionreset'])) {
+		if($_POST['sessionreset'] == 'Reset Session') {
+			unset($_POST['sessionreset']);
+		}
+	}
 } else if (isset($_POST['logoff']) && $_POST['logoff'] == 'Logout') {
 	unset($_SESSION['username']);
 	echo "Logout successful";

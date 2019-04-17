@@ -1,3 +1,6 @@
+<?php
+if(isset($_SESSION['username'])) {
+?>
 <div id="postvlak" class="pages" style='padding: 15px'>
 	<form name="upload" action="submit.php" enctype="multipart/form-data" method="post">
 	<?php
@@ -55,3 +58,6 @@
 		?>
 	<input id="submit" type="submit" name="submit" value="Submit"></form>
 </div>
+<?php
+}
+?>
