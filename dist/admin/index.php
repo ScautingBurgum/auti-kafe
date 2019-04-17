@@ -306,8 +306,8 @@ if(isset($_POST['submit'])) {
 			foreach($selectedpics as $res) {
 				$numres = ((int)$res);
 				$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res";
-				
-				if($currentartids = mysqli_query($conn,$currentartids)) {				
+
+				if($currentartids = mysqli_query($conn,$currentartids)) {
 					$results = mysqli_fetch_assoc($currentartids);
 					$results = explode(',',$results['artikel_id']);
 					if(!in_array($count, $count2)) {
@@ -315,10 +315,10 @@ if(isset($_POST['submit'])) {
 					}
 				}
 				if(isset($results)) {
-					$count2 = array_merge($results, $count2);		
+					$count2 = array_merge($results, $count2);
 				}
-				$count3 = implode(',',$count2);	
-				$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $latestuniqueid; ";	
+				$count3 = implode(',',$count2);
+				$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $latestuniqueid; ";
 				unset($count2); // $foo is gone
 				$count2 = array();
 				$query1 .= "UPDATE images SET `artikel_id` = $latestuniqueid WHERE `id` = $numres; ";
@@ -381,13 +381,13 @@ if(isset($_POST['submit'])) {
 		}
 		$picamount = $_POST['amount'];
 		$selectedpics = $_POST['pictureids'];
-		$count2 = array();		
+		$count2 = array();
 		$query1 = "";
 		foreach($selectedpics as $res) {
 			$numres = ((int)$res);
 			$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res";
-			
-			if($currentartids = mysqli_query($conn,$currentartids)) {				
+
+			if($currentartids = mysqli_query($conn,$currentartids)) {
 				$results = mysqli_fetch_assoc($currentartids);
 				$results = explode(',',$results['artikel_id']);
 				if(!in_array($count, $count2)) {
@@ -395,10 +395,10 @@ if(isset($_POST['submit'])) {
 				}
 			}
 			if(isset($results)) {
-				$count2 = array_merge($results, $count2);		
+				$count2 = array_merge($results, $count2);
 			}
-			$count3 = implode(',',$count2);	
-			$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $numres; ";	
+			$count3 = implode(',',$count2);
+			$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $numres; ";
 			unset($count2); // $foo is gone
 			$count2 = array();
 		}

@@ -48,8 +48,8 @@
                   $picId = $result['id'];
                 }else {
                   $picId = 3; //VOEG DEFAULT IMAGE IN
-                }                
-              } 
+                }
+              }
             //echo $titel;
             //echo $text;
             //echo $date;
@@ -66,7 +66,7 @@
                     </h2>
                   </div>
                 </div>
-                <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="<?php echo '../admin/image.php?id=' . $picId; ?>" alt="">
+                <img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="<?php echo '/admin/image.php?id=' . $picId; ?>" alt="">
                 <!--<img class="product-item-img mx-auto d-flex rounded img-fluid mb-3 mb-lg-0" src="/img/aandebar.jpg" alt="">-->
                 <div class="product-item-description d-flex <?php echo ($i%2 == 0 ?'mr':'ml');?>-auto">
                   <div class="bg-faded p-5 rounded" id="content">
