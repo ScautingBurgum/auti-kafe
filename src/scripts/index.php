@@ -1,4 +1,4 @@
 <?php
 echo "Nice try!";
-header("refresh:3;/admin/");
+header("refresh:3;/index.html");
 ?>
