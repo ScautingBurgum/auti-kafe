@@ -9,7 +9,7 @@
     <title>Auti Kafé - Admin</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
     <!-- Bootstrap core CSS -->
-<link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom fonts for this template -->
 <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -17,6 +17,25 @@
 
 <!-- Custom styles for this template -->
 <link href="/css/business-casual.min.css" rel="stylesheet">
+
+    <script src="/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/marked/marked.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    var url = window.location.pathname; //sets the variable "url" to the pathname of the current window
+
+        $('nav li a').each(function () { //looks in each link item within the primary-nav list
+            var linkPage = this.getAttribute("href"); //sets the variable "linkPage" as the substring of the url path in each &lt;a&gt;
+
+            if (url == linkPage) { //compares the path of the current window to the path of the linked page in the nav item
+                $(this).parent().addClass('active'); //if the above is true, add the "active" class to the parent of the &lt;a&gt; which is the &lt;li&gt; in the nav list
+            }
+        });
+})
+
+
+</script>
 
     <link rel="stylesheet" href="/vendor/easymde/dist/easymde.min.css">
 	<script src="/vendor/easymde/dist/easymde.min.js"></script>
@@ -218,12 +237,11 @@
 
     <!-- Bootstrap core JavaScript -->
 
-    <script src="/vendor/jquery/jquery.min.js"></script>
-<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/vendor/marked/marked.min.js"></script>
 <script type="text/javascript">
   $(function () {
-    console.log("Hello")
     var url = window.location.pathname; //sets the variable "url" to the pathname of the current window
 
         $('nav li a').each(function () { //looks in each link item within the primary-nav list
@@ -246,14 +264,17 @@
 		$_SESSION['textareatext'] = $items['text'];
 		if(isset($_SESSION['textareatext'])) {
 			$textareatext = $_SESSION['textareatext'];
-		} else {
+		} else if($items['text']) {
 			$textareatext = $items['text'];
 		}
+	} else {
+		$textareatext = "";
 	}
 	?>
     <script>
-		easyMDE.value('<?php echo json_encode($textareatext); ?>');
-		document.getElementById('continue').scrollIntoView();
+    $(document).ready(function() {
+		easyMDE.value('<?php if(strlen($textareatext) > 1) { echo $textareatext; } ?>');
+	});
 	</script>
   </body>
 </html>

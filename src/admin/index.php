@@ -9,6 +9,7 @@
     <title>Auti Kafé - Admin</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
     <link rel="template" href="templates/styling.html">
+    <link rel="template" href="templates/scripts.html">
     <link rel="stylesheet" href="/vendor/easymde/dist/easymde.min.css">
 	<script src="/vendor/easymde/dist/easymde.min.js"></script>
 	<?php
@@ -120,14 +121,17 @@
 		$_SESSION['textareatext'] = $items['text'];
 		if(isset($_SESSION['textareatext'])) {
 			$textareatext = $_SESSION['textareatext'];
-		} else {
+		} else if($items['text']) {
 			$textareatext = $items['text'];
 		}
+	} else {
+		$textareatext = "";
 	}
 	?>
     <script>
-		easyMDE.value('<?php echo json_encode($textareatext); ?>');
-		document.getElementById('continue').scrollIntoView();
+    $(document).ready(function() {
+		easyMDE.value('<?php if(strlen($textareatext) > 1) { echo $textareatext; } ?>');
+	});
 	</script>
   </body>
 </html>
