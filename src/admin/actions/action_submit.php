@@ -191,6 +191,7 @@ if(isset($_SESSION['username']) || isset($_POST['registerform']) && $_POST['regi
 		}else if(isset($_POST['titel']) && isset($_POST['text']) && isset($_POST['date']) && isset($count) && strlen($count) >= 1) {
 			$titel = mysqli_real_escape_string ($conn,$_POST['titel']);
 			$text = mysqli_real_escape_string ($conn,$_POST['text']);
+			$oldarticleimg = mysqli_real_escape_string ($conn,$_POST['oldarticle']);
 			$date = $_POST['date'];
 			$query = "UPDATE evenement
 			SET `titel` = '$titel', `text` = '$text', `datetime` = '$date'
@@ -216,24 +217,56 @@ if(isset($_SESSION['username']) || isset($_POST['registerform']) && $_POST['regi
 			$count2 = array();		
 			$query1 = "";
 			if(isset($selectedpics) && $selectedpics != '') {
-				foreach($selectedpics as $res) {
+				foreach($selectedpics as $res) {					
+					$oldartids = "SELECT `artikel_id`,`id` FROM images WHERE `id` = (SELECT `id` FROM images WHERE `artikel_id` LIKE '%$oldarticleimg%' OR `artikel_id` LIKE '$oldarticleimg%' OR `artikel_id` LIKE '%$oldarticleimg')"; 
+					//GET ID OF IMG WITH THIS ARTICLE ADDED TO IT
+					if($oldartid = mysqli_query($conn,$oldartids)) {
+						$oldartikels = mysqli_fetch_assoc($oldartid);
+						$oldartikelimageid = $oldartikels['id'];
+
+						$commaleft = ",$oldarticleimg";
+						$commaright = "$oldarticleimg,";
+
+						if(strpos($oldartikels['artikel_id'],$commaleft) || $oldartikels['artikel_id'] == $commaleft) {
+							$replacedstring = str_replace($commaleft, "", $oldartikels['artikel_id']);
+							$somethingreplaced = true;
+						} else if(strpos($oldartikels['artikel_id'],$commaright) || $oldartikels['artikel_id'] == $commaright) {
+							$replacedstring = str_replace($commaright, "", $oldartikels['artikel_id']);
+							$somethingreplaced = true;
+						} else if($oldartikels['artikel_id'] === $oldarticleimg) {
+							$replacedstring = str_replace($oldarticleimg, "", $oldartikels['artikel_id']);
+							$somethingreplaced = true;
+						}
+						
+						if(isset($somethingreplaced) && $somethingreplaced){
+
+							$removequery = "UPDATE images SET `artikel_id` = '$replacedstring' WHERE `id` = $oldartikelimageid";
+
+							if($removequery = mysqli_query($conn,$removequery)) {
+								echo "<br />Removed artikel from old image id: $oldartikelimageid";
+							} else {
+								echo("Error description: " . mysqli_error($conn));
+							}
+						}
+					}
 					$numres = ((int)$res);
-					$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res";
+					$currentartids = "SELECT `artikel_id` FROM images WHERE `id` = $res"; 
+					//GET EXISTING IDS OF SELECTED IMAGE
 					
 					if($currentartids = mysqli_query($conn,$currentartids)) {				
 						$results = mysqli_fetch_assoc($currentartids);
 						$results = explode(',',$results['artikel_id']);
+						$count2 = $results;
+						
 						if(!in_array($count, $count2)) {
 							$count2[] = $count;
 						}
 					}
-					if(isset($results)) {
-						$count2 = array_merge($results, $count2);		
-					}
-					$count3 = implode(',',$count2);	
-					$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $numres; ";	
+					$count3 = implode(',',array_filter($count2));	
+					$query1 .= "UPDATE images SET `artikel_id` = '$count3' WHERE `id` = $numres; ";
 					unset($count2); // $foo is gone
 					$count2 = array();
+					
 				}
 			}
 			$query1 .= "UPDATE `evenement` SET `picturecount` = $picamount WHERE id = $count;";

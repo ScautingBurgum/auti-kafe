@@ -39,17 +39,20 @@ if(isset($_SESSION['username'])) {
 			}
 			echo"<div style='display: table-cell;width: 100%;'>";
 			$query = "SELECT id,artikel_id FROM images";
-			if($query = mysqli_query($conn, $query)) {
+			if($query = mysqli_query($conn, $query)) {				
 				$numrows = mysqli_num_rows($query);
 				while($result = mysqli_fetch_assoc($query)) {
 					$picId = $result['id'];
-					$artikel_id = $result['artikel_id'];
-					if($artikel_id == $count && strlen($count) >= 1) {
+					$artikel_id = $result['artikel_id'];	
+					$alleartikelids = explode(',',$artikel_id);		
+					if(in_array($count, $alleartikelids) && strlen($count) >= 1) {
 						$checked = 'checked';
+						$oldarticle = $count;
 					} else {
 						$checked = '';
 					}
-					echo "<div style='float:left; margin: 5px;min-width: 200px;min-height: 200px;' class='imagediv'><img style='max-width: 200px; max-height: 200px' src='image.php?id=$picId' name='image' /><br /><input style='margin-left: calc(50% - 7px);margin-top: 5px;' type='radio' value='$picId' name='pictureids[]' $checked></div>";
+					
+					echo "<div style='float:left; margin: 5px;min-width: 200px;min-height: 200px;' class='imagediv'><img style='max-width: 200px; max-height: 200px' src='image.php?id=$picId' name='image' /><br /><input style='margin-left: calc(50% - 7px);margin-top: 5px;' type='radio' value='$picId' name='pictureids[]' $checked><input type='hidden' name='oldarticle' value='$oldarticle'></div>";
 					/*
 					echo "<div style='float:left; margin: 5px;' class='imagediv'><img style='max-width: 200px; max-height: 200px' src='image.php?id=$picId' name='image' /><br />
 					<input style='margin-left: calc(50% - 7px);margin-top: 5px;' type='checkbox' value='$picId' name='pictureids[]' $checked></div>";
