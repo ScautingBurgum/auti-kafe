@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 07 mrt 2019 om 13:33
+-- Gegenereerd op: 24 apr 2019 om 18:17
 -- Serverversie: 10.1.37-MariaDB
--- PHP-versie: 7.3.1
+-- PHP-versie: 7.3.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `kafelogin`
 --
-CREATE DATABASE IF NOT EXISTS `kafelogin` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `kafelogin`;
 
 -- --------------------------------------------------------
 
@@ -35,7 +33,7 @@ CREATE TABLE `evenement` (
   `titel` varchar(64) NOT NULL,
   `datetime` date NOT NULL,
   `text` text NOT NULL,
-  `actief` tinyint(4) NOT NULL DEFAULT '0'
+  `picturecount` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -49,7 +47,8 @@ CREATE TABLE `images` (
   `name` varchar(64) NOT NULL,
   `original_name` varchar(64) NOT NULL,
   `mime_type` varchar(20) NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '0'
+  `active` tinyint(1) NOT NULL DEFAULT '0',
+  `artikel_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -60,9 +59,9 @@ CREATE TABLE `images` (
 
 CREATE TABLE `kafelogin` (
   `id` int(11) NOT NULL,
+  `username` varchar(64) NOT NULL,
   `email` varchar(64) NOT NULL,
   `password` varchar(64) NOT NULL,
-  `showone` tinyint(4) NOT NULL DEFAULT '0',
   `picturecount` int(12) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
