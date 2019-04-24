@@ -1,10 +1,61 @@
 <?php
 require_once('../scripts/dbcon.php');
-if(isset($_SESSION['username'])) {
+if(isset($_SESSION['username']) || isset($_POST['registerform']) && $_POST['registerform'] == "register") {
 	if(isset($_POST['id'])) {
 		$count = $_POST['id'];
 	} else {
 		unset($count);
+	}
+	if(isset($_POST['registerform']) && $_POST['registerform'] == "register") {
+		$username = mysqli_real_escape_string ($conn,$_POST['username']);
+		$email = mysqli_real_escape_string ($conn,$_POST['email']);
+		$password = mysqli_real_escape_string ($conn,$_POST['password']);
+		$cPassword = mysqli_real_escape_string ($conn,$_POST['password_confirm']);
+		$secretcode = mysqli_real_escape_string ($conn,$_POST['scode']);
+		$error = "";
+		$query = "SELECT username FROM kafelogin";
+		if($query = mysqli_query($conn, $query)) {
+			while($result = mysqli_fetch_assoc($query)) {
+				if(strtolower($result['username']) == strtolower($username)) {
+					$error .= "Username already exists! <br />";
+				}
+			}
+			unset($query);
+		}
+		if(strlen($username) < 4 && strlen($password) < 4 && strlen($cPassword) < 4 && strlen($email) < 4) {
+			$error .= "Username needs to be 3 characters or more! <br />";
+		}
+		if(strlen($password) < 4) {
+			$error .= "Passwords need 4 characters or more! <br />";
+		}
+		if(strlen($email) < 4) {
+			$error .= "Email need 4 characters or more! <br />";
+		}
+		if($password != $cPassword) {
+			$error .= "Passwords don't match <br />";
+		}
+		if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+			$error .= "Not a valid email address <br /><br />";				
+		}
+		if($secretcode != "copyscauting") {
+			$error .= "Wrong secret code <br /><br />";
+		}
+		if(strlen($error) < 1) {
+			$safepassword = password_hash($password, PASSWORD_BCRYPT, array('cost'=>12));
+			$query = "INSERT INTO kafelogin (`username`, `email`, `password`)
+			VALUES ('$username', '$email', '$safepassword')";
+			if(mysqli_query($conn, $query)) {
+				echo "<div id='continue'>Username : $username registered! <br />
+				<a href'/login/'>Go to login!</a>";
+				unset($query);
+			} else {
+				echo("Error description: " . mysqli_error($conn));
+			}
+
+		} else {
+			$error .= "<a href='?action=register'>Go back!</a><br />";
+			echo $error;
+		}
 	}
 	if(isset($_POST['upload'])) {
 

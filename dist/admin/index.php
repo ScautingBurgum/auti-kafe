@@ -88,7 +88,7 @@
 </nav>
 
 	<?php
-	if(isset($_SESSION['username']) && !isset($_POST['logoff'])) {
+	if(isset($_SESSION['username']) && !isset($_POST['logoff']) || isset($_GET['action']) && $_GET['action'] == "register" || isset($_POST['registerform']) && $_POST['registerform'] == "register") {
 	?>
 	<div class='wrapper'>
 		<table id="adminpanelinterface" class="tborder2 shopwidth" cellspacing="0" cellpadding="10" border="0">
@@ -100,6 +100,12 @@
 				</tr>
 			</thead>
 			<tbody style="display: flex;" id="boardstats_e">
+				<?php
+				if(!isset($_GET['action'])) {
+					$_GET['action'] = NULL;
+				}
+				if($_GET['action'] !== "register") {
+				?>
 				<tr id="leftpanel">
 					<td>
 						<ul style="font-size: 20px; list-style-type: none">
@@ -126,7 +132,9 @@
 						</ul>
 						<div id ="personal" style="position: absolute; bottom: 0; margin-bottom: 10px">
 							<?php
-							echo "My username: " . $_SESSION['username'] . "<br />";
+							if(isset($_SESSION['username'])) {
+								echo "My username: " . $_SESSION['username'] . "<br />";
+							}
 							?>
 							<form action='' method='post'>
 							<input type='submit' value='Logout' name='logoff' />
@@ -135,11 +143,14 @@
 						</div>
 					</td>
 				</tr>
+				<?php
+				}
+				?>
 				<tr>
 					<td>
 						<div id='mainpage'>
 							<?php
-							$allowed = array('current', 'picupload', 'post', 'picdelete', 'submit');
+							$allowed = array('current', 'picupload', 'post', 'picdelete', 'submit', 'register');
 							if (isset($_GET['action'])){
 							    if (!in_array($_GET['action'], $allowed)) {
 							        exit('Not permitted to view this page');
@@ -164,7 +175,7 @@
 	echo "Logout successful";
 	header("refresh:3;index.php");
 } else {
-	echo "<a href='login.php'>Login aub</a>";
+	echo "<a href='/login/'>Login aub</a>";
 }
 ?>
 <!-- <footer class="footer text-faded text-center py-5">
