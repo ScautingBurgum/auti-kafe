@@ -9,7 +9,7 @@
     <title>Auti Kafé - Admin</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
     <!-- Bootstrap core CSS -->
-<link href="/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom fonts for this template -->
 <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -18,8 +18,8 @@
 <!-- Custom styles for this template -->
 <link href="/css/business-casual.min.css" rel="stylesheet">
 
-    <script src="/vendor/jquery/dist/jquery.min.js"></script>
-<script src="/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/vendor/marked/marked.min.js"></script>
 <script type="text/javascript">
   $(function () {
@@ -54,7 +54,7 @@
 	?>
 </head>
 <body>
-
+	
 
 <h1 class="site-heading text-center text-white d-none d-lg-block">
   <span class="site-heading-upper text-primary mb-3"><img src = "/img/Auti logo.png" width="400px" alt = "Auti logo.png"></span>
@@ -248,8 +248,8 @@
 
     <!-- Bootstrap core JavaScript -->
 
-    <script src="/vendor/jquery/dist/jquery.min.js"></script>
-<script src="/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/vendor/marked/marked.min.js"></script>
 <script type="text/javascript">
   $(function () {
