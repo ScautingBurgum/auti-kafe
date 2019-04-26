@@ -1,3 +1,6 @@
+<?php
+if(isset($_SESSION['username'])) {
+?>
 <div id="deletevlak" class="pages" style='padding: 15px'>
 	<?php
 	if(isset($_GET["pagenr"]) && $_GET['pagenr'] != 0 && is_numeric($_GET['pagenr'])) {
@@ -44,6 +47,8 @@
 			echo '<a name="deletevlak" href="?pagenr=' . $i . '">'.$i.'</a>';
 		}
 		echo '</span></div>';
+	} else {
+		echo("Error description: " . mysqli_error($conn));
 	}
 	if(strlen($count) >= 1) {
 		$query = "SELECT * FROM evenement WHERE id = $count";
@@ -75,8 +80,9 @@
 		<input id="deletebutton" type="submit" '; ?> onclick="return confirm('Are you sure?')" 
 		<?php echo 'value="Delete" name="deletebutton">
 		</form>';
-	} else {
-		echo("Error description: " . mysqli_error($conn));
 	}
 ?>
 </div>
+<?php
+}
+?>

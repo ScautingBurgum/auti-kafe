@@ -11,6 +11,3 @@ if (mysqli_connect_errno())
   session_start();
 
 ?>
- <head>
-<link rel="stylesheet" type="text/css" href="style.css">
-</head> 

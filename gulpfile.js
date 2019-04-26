@@ -23,31 +23,35 @@ const banner = ['/*!\n',
 // Copy third party libraries from /node_modules into /vendor
 gulp.task('vendor', function(cb) {
 
-  // Bootstrap
-  gulp.src([
-      './node_modules/bootstrap/dist/**/*',
-      '!./node_modules/bootstrap/dist/css/bootstrap-grid*',
-      '!./node_modules/bootstrap/dist/css/bootstrap-reboot*'
-    ])
-    .pipe(gulp.dest('./dist/vendor/bootstrap'))
+	// Bootstrap
+	gulp.src([
+	   './node_modules/bootstrap/dist/**/*',
+	   '!./node_modules/bootstrap/dist/css/bootstrap-grid*',
+	   '!./node_modules/bootstrap/dist/css/bootstrap-reboot*'
+	])
+	.pipe(gulp.dest('./dist/vendor/bootstrap'))
 
-  // jQuery
-  gulp.src([
-      './node_modules/jquery/dist/*',
-      '!./node_modules/jquery/dist/core.js'
-    ])
-    .pipe(gulp.dest('./dist/vendor/jquery'))
+	// jQuery
+	gulp.src([
+	    './node_modules/jquery/dist/*',
+	    '!./node_modules/jquery/dist/core.js'
+	])
+	.pipe(gulp.dest('./dist/vendor/jquery'))
 
-    gulp.src([
-        './node_modules/marked/marked.min.js'
-      ])
-      .pipe(gulp.dest('./dist/vendor/marked'))
-      gulp.src([
-          './node_modules/easymde/dist/*'
-        ])
-        .pipe(gulp.dest('./dist/vendor/easymde'))
+	//Markup
 
-  cb();
+	gulp.src([
+	    './node_modules/marked/marked.min.js'
+	])
+	.pipe(gulp.dest('./dist/vendor/marked'))
+
+	//easyMDE
+	gulp.src([
+	    './node_modules/easymde/dist/*'
+	])
+	.pipe(gulp.dest('./dist/vendor/easymde'))
+
+	cb();
 
 });
 

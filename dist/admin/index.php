@@ -9,7 +9,7 @@
     <title>Auti Kafé - Admin</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
     <!-- Bootstrap core CSS -->
-<link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="/vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <!-- Custom fonts for this template -->
 <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -18,8 +18,27 @@
 <!-- Custom styles for this template -->
 <link href="/css/business-casual.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="/vendor/easymde/easymde.min.css">
-	<script src="/vendor/easymde/easymde.min.js"></script>
+    <script src="/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/vendor/marked/marked.min.js"></script>
+<script type="text/javascript">
+  $(function () {
+    var url = window.location.pathname; //sets the variable "url" to the pathname of the current window
+
+        $('nav li a').each(function () { //looks in each link item within the primary-nav list
+            var linkPage = this.getAttribute("href"); //sets the variable "linkPage" as the substring of the url path in each &lt;a&gt;
+
+            if (url == linkPage) { //compares the path of the current window to the path of the linked page in the nav item
+                $(this).parent().addClass('active'); //if the above is true, add the "active" class to the parent of the &lt;a&gt; which is the &lt;li&gt; in the nav list
+            }
+        });
+})
+
+
+</script>
+
+    <link rel="stylesheet" href="/vendor/easymde/dist/easymde.min.css">
+	<script src="/vendor/easymde/dist/easymde.min.js"></script>
 	<?php
 	require_once('../scripts/dbcon.php');
 	if(isset($_SESSION['artformid'])) {
@@ -35,7 +54,7 @@
 	?>
 </head>
 <body>
-	
+
 
 <h1 class="site-heading text-center text-white d-none d-lg-block">
   <span class="site-heading-upper text-primary mb-3"><img src = "/img/Auti logo.png" width="400px" alt = "Auti logo.png"></span>
@@ -69,7 +88,7 @@
 </nav>
 
 	<?php
-	if(isset($_SESSION['username']) && !isset($_POST['logoff'])) {
+	if(isset($_SESSION['username']) && !isset($_POST['logoff']) || isset($_GET['action']) && $_GET['action'] == "register" || isset($_POST['registerform']) && $_POST['registerform'] == "register") {
 	?>
 	<div class='wrapper'>
 		<table id="adminpanelinterface" class="tborder2 shopwidth" cellspacing="0" cellpadding="10" border="0">
@@ -81,6 +100,12 @@
 				</tr>
 			</thead>
 			<tbody style="display: flex;" id="boardstats_e">
+				<?php
+				if(!isset($_GET['action'])) {
+					$_GET['action'] = NULL;
+				}
+				if($_GET['action'] !== "register") {
+				?>
 				<tr id="leftpanel">
 					<td>
 						<ul style="font-size: 20px; list-style-type: none">
@@ -107,7 +132,9 @@
 						</ul>
 						<div id ="personal" style="position: absolute; bottom: 0; margin-bottom: 10px">
 							<?php
-							echo "My username: " . $_SESSION['username'] . "<br />";
+							if(isset($_SESSION['username'])) {
+								echo "My username: " . $_SESSION['username'] . "<br />";
+							}
 							?>
 							<form action='' method='post'>
 							<input type='submit' value='Logout' name='logoff' />
@@ -116,11 +143,14 @@
 						</div>
 					</td>
 				</tr>
+				<?php
+				}
+				?>
 				<tr>
 					<td>
 						<div id='mainpage'>
 							<?php
-							$allowed = array('current', 'picupload', 'post', 'picdelete', 'submit');
+							$allowed = array('current', 'picupload', 'post', 'picdelete', 'submit', 'register');
 							if (isset($_GET['action'])){
 							    if (!in_array($_GET['action'], $allowed)) {
 							        exit('Not permitted to view this page');
@@ -135,12 +165,17 @@
 		</table>
 	</div>
 <?php
+	if(isset($_POST['sessionreset'])) {
+		if($_POST['sessionreset'] == 'Reset Session') {
+			unset($_POST['sessionreset']);
+		}
+	}
 } else if (isset($_POST['logoff']) && $_POST['logoff'] == 'Logout') {
 	unset($_SESSION['username']);
 	echo "Logout successful";
 	header("refresh:3;index.php");
 } else {
-	echo "<a href='login.php'>Login aub</a>";
+	echo "<a href='/login/'>Login aub</a>";
 }
 ?>
 <!-- <footer class="footer text-faded text-center py-5">
@@ -213,12 +248,11 @@
 
     <!-- Bootstrap core JavaScript -->
 
-    <script src="/vendor/jquery/jquery.min.js"></script>
-<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery/dist/jquery.min.js"></script>
+<script src="/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/vendor/marked/marked.min.js"></script>
 <script type="text/javascript">
   $(function () {
-    console.log("Hello")
     var url = window.location.pathname; //sets the variable "url" to the pathname of the current window
 
         $('nav li a').each(function () { //looks in each link item within the primary-nav list
@@ -241,14 +275,17 @@
 		$_SESSION['textareatext'] = $items['text'];
 		if(isset($_SESSION['textareatext'])) {
 			$textareatext = $_SESSION['textareatext'];
-		} else {
+		} else if($items['text']) {
 			$textareatext = $items['text'];
 		}
+	} else {
+		$textareatext = "";
 	}
 	?>
     <script>
-		easyMDE.value('<?php echo json_encode($textareatext); ?>');
-		document.getElementById('continue').scrollIntoView();
+    $(document).ready(function() {
+		easyMDE.value('<?php if(strlen($textareatext) > 1) { echo $textareatext; } ?>');
+	});
 	</script>
   </body>
 </html>

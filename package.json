@@ -30,11 +30,11 @@
         "easymde": "^2.6.0",
         "gulp-connect-php": "^1.0.3",
         "gulp-html-header": "^1.0.5",
-        "jquery": "3.3.1"
+        "jquery": "^3.4.0"
     },
     "devDependencies": {
-        "browser-sync": "2.26.3",
-        "gulp": "4.0.0",
+        "browser-sync": "^2.26.4",
+        "gulp": "^4.0.0",
         "gulp-autoprefixer": "6.0.0",
         "gulp-clean-css": "4.0.0",
         "gulp-header": "2.0.7",

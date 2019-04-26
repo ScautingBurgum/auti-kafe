@@ -8,21 +8,24 @@
 <?php
 if(isset($_POST['submit'])) {
   if(isset($_POST['email']) && isset($_POST['password'])) {
-    $username = mysqli_real_escape_string ($conn,$_POST['email']); 
+    $email = mysqli_real_escape_string ($conn,$_POST['email']); 
     $password = mysqli_real_escape_string ($conn,$_POST['password']);
-    $query = mysqli_query($conn, "SELECT * FROM kafelogin");
-    $result = mysqli_fetch_array($query);
-    if($result['email'] == $username && $result['password'] == $password) {
-      echo "Success";
-      $_SESSION['username'] = $username;
-      header("refresh:3;../admin/");
-      die();
-    } else {
-      echo "Verkeerde username / password";
+    $query = "SELECT email, username, password FROM kafelogin WHERE email = '$email'";
+    if($query = mysqli_query($conn, $query)) {
+      $result = mysqli_fetch_array($query);
+      if($result['email'] == $email && password_verify($password,$result['password'])) {
+        $_SESSION['username'] = $result['username'];
+        header("Location: /admin/");
+        die();
+      } else {
+        echo "Verkeerde username / password";
+      }
     }
-  }else{
+  } else{
     echo "No username or password set!";
   }
+} else if (isset($_POST['register'])) {
+  header("Location: /admin/?action=register");
 } else {
   header('index.php');
 }

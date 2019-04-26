@@ -9,8 +9,9 @@
     <title>Auti Kafé - Admin</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
     <link rel="template" href="templates/styling.html">
-    <link rel="stylesheet" href="/vendor/easymde/easymde.min.css">
-	<script src="/vendor/easymde/easymde.min.js"></script>
+    <link rel="template" href="templates/scripts.html">
+    <link rel="stylesheet" href="/vendor/easymde/dist/easymde.min.css">
+	<script src="/vendor/easymde/dist/easymde.min.js"></script>
 	<?php
 	require_once('../scripts/dbcon.php');
 	if(isset($_SESSION['artformid'])) {
@@ -28,7 +29,7 @@
 <body>
 	<link rel="template" href="templates/header.html">
 	<?php
-	if(isset($_SESSION['username']) && !isset($_POST['logoff'])) {
+	if(isset($_SESSION['username']) && !isset($_POST['logoff']) || isset($_GET['action']) && $_GET['action'] == "register" || isset($_POST['registerform']) && $_POST['registerform'] == "register") {
 	?>
 	<div class='wrapper'>
 		<table id="adminpanelinterface" class="tborder2 shopwidth" cellspacing="0" cellpadding="10" border="0">
@@ -40,6 +41,12 @@
 				</tr>
 			</thead>
 			<tbody style="display: flex;" id="boardstats_e">
+				<?php
+				if(!isset($_GET['action'])) {
+					$_GET['action'] = NULL;
+				}
+				if($_GET['action'] !== "register") {
+				?>
 				<tr id="leftpanel">
 					<td>
 						<ul style="font-size: 20px; list-style-type: none">
@@ -66,7 +73,9 @@
 						</ul>
 						<div id ="personal" style="position: absolute; bottom: 0; margin-bottom: 10px">
 							<?php
-							echo "My username: " . $_SESSION['username'] . "<br />";
+							if(isset($_SESSION['username'])) {
+								echo "My username: " . $_SESSION['username'] . "<br />";
+							}
 							?>
 							<form action='' method='post'>
 							<input type='submit' value='Logout' name='logoff' />
@@ -75,11 +84,14 @@
 						</div>
 					</td>
 				</tr>
+				<?php
+				}
+				?>
 				<tr>
 					<td>
 						<div id='mainpage'>
 							<?php
-							$allowed = array('current', 'picupload', 'post', 'picdelete', 'submit');
+							$allowed = array('current', 'picupload', 'post', 'picdelete', 'submit', 'register');
 							if (isset($_GET['action'])){
 							    if (!in_array($_GET['action'], $allowed)) {
 							        exit('Not permitted to view this page');
@@ -94,12 +106,17 @@
 		</table>
 	</div>
 <?php
+	if(isset($_POST['sessionreset'])) {
+		if($_POST['sessionreset'] == 'Reset Session') {
+			unset($_POST['sessionreset']);
+		}
+	}
 } else if (isset($_POST['logoff']) && $_POST['logoff'] == 'Logout') {
 	unset($_SESSION['username']);
 	echo "Logout successful";
 	header("refresh:3;index.php");
 } else {
-	echo "<a href='login.php'>Login aub</a>";
+	echo "<a href='/login/'>Login aub</a>";
 }
 ?>
 <link rel="template" href="templates/footer.html">
@@ -115,14 +132,17 @@
 		$_SESSION['textareatext'] = $items['text'];
 		if(isset($_SESSION['textareatext'])) {
 			$textareatext = $_SESSION['textareatext'];
-		} else {
+		} else if($items['text']) {
 			$textareatext = $items['text'];
 		}
+	} else {
+		$textareatext = "";
 	}
 	?>
     <script>
-		easyMDE.value('<?php echo json_encode($textareatext); ?>');
-		document.getElementById('continue').scrollIntoView();
+    $(document).ready(function() {
+		easyMDE.value('<?php if(strlen($textareatext) > 1) { echo $textareatext; } ?>');
+	});
 	</script>
   </body>
 </html>
