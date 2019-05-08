@@ -37,8 +37,8 @@
 
 </script>
 
-    <link rel="stylesheet" href="/vendor/easymde/dist/easymde.min.css">
-	<script src="/vendor/easymde/dist/easymde.min.js"></script>
+    <link rel="stylesheet" href="/vendor/easymde/easymde.min.css">
+	<script src="/vendor/easymde/easymde.min.js"></script>
 	<?php
 	require_once('../scripts/dbcon.php');
 	if(isset($_SESSION['artformid'])) {
@@ -75,6 +75,9 @@
         </li>
         <li class="nav-item px-lg-4">
           <a class="nav-link text-uppercase text-expanded" href="/about/">Over ons</a>
+        </li>
+        <li class="nav-item px-lg-4">
+          <a class="nav-link text-uppercase text-expanded" href="/evening/">De avond</a>
         </li>
         <li class="nav-item px-lg-4">
           <a class="nav-link text-uppercase text-expanded" href="/events/">Events</a>

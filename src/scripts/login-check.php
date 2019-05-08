@@ -8,10 +8,12 @@
 <?php
 if(isset($_POST['submit'])) {
   if(isset($_POST['email']) && isset($_POST['password'])) {
-    $email = mysqli_real_escape_string ($conn,$_POST['email']); 
+
+    $email = mysqli_real_escape_string ($conn,$_POST['email']);
     $password = mysqli_real_escape_string ($conn,$_POST['password']);
     $query = "SELECT email, username, password FROM kafelogin WHERE email = '$email'";
     if($query = mysqli_query($conn, $query)) {
+      echo "Test";
       $result = mysqli_fetch_array($query);
       if($result['email'] == $email && password_verify($password,$result['password'])) {
         $_SESSION['username'] = $result['username'];
@@ -20,6 +22,9 @@ if(isset($_POST['submit'])) {
       } else {
         echo "Verkeerde username / password";
       }
+    }
+    else{
+      echo "No user found!";
     }
   } else{
     echo "No username or password set!";

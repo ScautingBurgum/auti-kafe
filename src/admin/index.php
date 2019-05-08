@@ -10,8 +10,8 @@
     <link rel="stylesheet" type="text/css" href="/style.css">
     <link rel="template" href="templates/styling.html">
     <link rel="template" href="templates/scripts.html">
-    <link rel="stylesheet" href="/vendor/easymde/dist/easymde.min.css">
-	<script src="/vendor/easymde/dist/easymde.min.js"></script>
+    <link rel="stylesheet" href="/vendor/easymde/easymde.min.css">
+	<script src="/vendor/easymde/easymde.min.js"></script>
 	<?php
 	require_once('../scripts/dbcon.php');
 	if(isset($_SESSION['artformid'])) {

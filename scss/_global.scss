@@ -68,5 +68,5 @@ p {
 
 .bg-faded {
   background-color: fade-out($white, 0.15);
-  word-break: break-all;
+  word-break: normal;
 }
