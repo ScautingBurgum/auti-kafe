@@ -105,10 +105,17 @@ function browserSyncStart(done) {
   //     baseDir: "./dist/"
   //   }
   // });
+  var binLocation = '/usr/bin/php';
+  var iniLocation = '/etc/php/7.2/cli/php.ini'
+  var isWin = process.platform === "win32";
+  if(isWin){
+    binLocation = "C:/xampp/php/php.exe";
+    iniLocation = "C:/xampp/php/php.ini"
+  }
   connectPHP.server({
     hostname: '0.0.0.0',
-    bin: '/usr/bin/php',
-    ini: '/etc/php/7.2/cli/php.ini',
+    bin: binLocation,
+    ini: iniLocation,
     port: 8000,
     base: 'dist'
     // livereload: true
