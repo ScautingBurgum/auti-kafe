@@ -218,6 +218,8 @@
 				<div class="col-xs-12 col-sm-4 col-md-4">
           <h5>Mede mogelijk gemaakt door:</h5>
           <a target = "_blank" href="https:scauting.nl"><img src="/img/scauting-logo.jpg" width="90%" alt=""></a>
+					<a target = "_blank" href="https:scauting.nl"><img src="/img/aktdiel-logo.png"  height="100px" alt=""></a>
+					<a target = "_blank" href="https:scauting.nl"><img src="/img/NVA.png"  height="100px" alt=""></a>
 				</div>
 				<div class="col-xs-12 col-sm-4 col-md-4">
 					<h5>Contact</h5>
