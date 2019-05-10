@@ -139,4 +139,5 @@ function syncImgs(){
 
 gulp.task("default", gulp.parallel('vendor', css));
 // dev task
+gulp.task("temp",temp)
 gulp.task("dev", gulp.parallel(watchFiles, browserSyncStart, temp, syncImgs));
