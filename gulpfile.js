@@ -9,16 +9,42 @@ const rename = require("gulp-rename");
 const sass = require("gulp-sass");
 const pkg = require('./package.json');
 const connectPHP = require('gulp-connect-php');
-// const livereload = require('gulp-livereload');
+var gutil = require('gulp-util');
+var ftp = require('vinyl-ftp');
 
-// Set the banner content
-const banner = ['/*!\n',
-  ' * Start Bootstrap - <%= pkg.title %> v<%= pkg.version %> (<%= pkg.homepage %>)\n',
-  ' * Copyright 2013-' + (new Date()).getFullYear(), ' <%= pkg.author %>\n',
-  ' * Licensed under <%= pkg.license %> (https://github.com/BlackrockDigital/<%= pkg.name %>/blob/master/LICENSE)\n',
-  ' */\n',
-  '\n'
-].join('');
+
+
+
+var localFiles = [
+    './dist/**/*'
+];
+
+var remoteLocation = 'www/';
+
+function getFtpConnection(){
+    var config = require('.env.json');
+    css();
+    temp();
+    syncImgs();
+    vendor();
+    return ftp.create({
+        host: config.host,
+        port: config.port,
+        user: config.username,
+        password: config.password,
+        parallel: 5,
+        log: gutil.log
+    })
+}
+
+//deploy to remote server
+gulp.task('remote-deploy',function(){
+    var conn = getFtpConnection();
+    return gulp.src(localFiles, {base: '.', buffer: false})
+        .pipe(conn.newer(remoteLocation))
+        .pipe(conn.dest(remoteLocation))
+})
+
 
 // Copy third party libraries from /node_modules into /vendor
 gulp.task('vendor', function(cb) {
@@ -67,9 +93,6 @@ function css() {
     .pipe(autoprefixer({
       browsers: ['last 2 versions'],
       cascade: false
-    }))
-    .pipe(header(banner, {
-      pkg: pkg
     }))
     .pipe(gulp.dest("./dist/css/"))
     .pipe(rename({
@@ -128,7 +151,7 @@ function temp() {
     gulp.src('./src/**/*.css')
         .pipe(template())
         .pipe(gulp.dest('dist'))
-    gulp.src('./src/**/*.js')
+    return gulp.src('./src/**/*.js')
         .pipe(template())
         .pipe(gulp.dest('dist'))
 }
