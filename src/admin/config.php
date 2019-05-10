@@ -11,9 +11,9 @@
 ##################################################
 
 define("DB_HOST", "localhost");
-define("DB_USER", "root");
-define("DB_PASS", "");
-define("DB_NAME", "kafelogin");
+define("DB_USER", "autikafe_nl_kafelogin");
+define("DB_PASS", "E6fWq7xLqdHX");
+define("DB_NAME", "autikafe_nl_kafelogin");
 define("DB_TABLE", "images");
 
 ##################################################
