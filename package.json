@@ -31,6 +31,7 @@
         "gulp-cli": "^2.2.0",
         "gulp-connect-php": "^1.0.3",
         "gulp-html-header": "^1.0.5",
+        "gulp-sftp": "^0.1.5",
         "jquery": "^3.4.0"
     },
     "devDependencies": {

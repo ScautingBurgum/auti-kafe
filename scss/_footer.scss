@@ -64,6 +64,9 @@ section .section-title {
 #footer ul.quick-links li:hover a i {
     font-weight: 700;
 }
+#footer img {
+  margin: 5px;
+}
 
 @media (max-width:767px){
 	#footer h5 {

@@ -10,7 +10,6 @@ const sass = require("gulp-sass");
 const pkg = require('./package.json');
 const connectPHP = require('gulp-connect-php');
 var gutil = require('gulp-util');
-var ftp = require('vinyl-ftp');
 
 
 
@@ -21,29 +20,22 @@ var localFiles = [
 
 var remoteLocation = 'www/';
 
-function getFtpConnection(){
-    var config = require('.env.json');
-    css();
-    temp();
-    syncImgs();
-    vendor();
-    return ftp.create({
-        host: config.host,
-        port: config.port,
-        user: config.username,
-        password: config.password,
-        parallel: 5,
-        log: gutil.log
-    })
-}
-
-//deploy to remote server
 gulp.task('remote-deploy',function(){
-    var conn = getFtpConnection();
-    return gulp.src(localFiles, {base: '.', buffer: false})
-        .pipe(conn.newer(remoteLocation))
-        .pipe(conn.dest(remoteLocation))
-})
+    var config = require('./.env.json');
+    css()
+    temp()
+    syncImgs()
+    // gulp.parallel('vendor', css,temp,syncImgs)
+    var sftp = require('gulp-sftp');
+
+    return gulp.src('dist/**/*')
+        .pipe(sftp({
+            host: config.host,
+            user: config.username,
+            pass: config.password,
+            remotePath: 'www/'
+        }));
+});
 
 
 // Copy third party libraries from /node_modules into /vendor
@@ -115,8 +107,8 @@ function browserSyncStart(done) {
   // });
   connectPHP.server({
     hostname: '0.0.0.0',
-    bin: 'C:/xampp/php/php.exe',
-    ini: 'C:/xampp/php/php.ini',
+    bin: '/usr/bin/php',
+    ini: '/etc/php/7.2/cli/php.ini',
     port: 8000,
     base: 'dist'
     // livereload: true
@@ -156,11 +148,11 @@ function temp() {
         .pipe(gulp.dest('dist'))
 }
 function syncImgs(){
-  gulp.src('./img/*')
+  return gulp.src('./img/*')
       .pipe(gulp.dest('./dist/img/'));
 }
 
-gulp.task("default", gulp.parallel('vendor', css));
+gulp.task("default", gulp.parallel('vendor', css,temp,syncImgs));
 // dev task
 gulp.task("temp",temp)
-gulp.task("dev", gulp.parallel(watchFiles, browserSyncStart, temp, syncImgs));
+gulp.task("dev", gulp.parallel(watchFiles, browserSyncStart));
